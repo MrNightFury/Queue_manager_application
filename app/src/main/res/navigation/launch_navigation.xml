@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/launch_navigation"
+    app:startDestination="@id/connectionCheckFragment">
+
+    <fragment
+        android:id="@+id/connectionCheckFragment"
+        android:name="ru.mrnightfury.queuemanager.view.launchActivity.ConnectionCheckFragment"
+        android:label="fragment_connection_check"
+        tools:layout="@layout/fragment_connection_check" >
+        <action
+            android:id="@+id/action_loginNeeded"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_connectionSucceeded"
+            app:destination="@id/mainActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.mrnightfury.queuemanager.view.launchActivity.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginSucceeded"
+            app:destination="@id/mainActivity" />
+        <action
+            android:id="@+id/action_signInRequired"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="ru.mrnightfury.queuemanager.view.launchActivity.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInSucceeded"
+            app:destination="@id/mainActivity" />
+    </fragment>
+</navigation>

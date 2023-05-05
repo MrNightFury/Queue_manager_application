@@ -1,0 +1,76 @@
+package ru.mrnightfury.queuemanager.viewmodel;
+
+import android.content.Context;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.mrnightfury.queuemanager.R;
+import ru.mrnightfury.queuemanager.model.AccountModel;
+import ru.mrnightfury.queuemanager.model.networkAPI.NetworkService;
+
+public class LoginViewModel extends ViewModel {
+    private static String TAG = "LVM";
+
+    private MutableLiveData<String> token = new MutableLiveData<>();
+    private MutableLiveData<LoginStates> state = new MutableLiveData<>();
+    private String status;
+    private final AccountModel accountModel = AccountModel.getInstance();
+
+    public LiveData<String> getToken() {
+        return token;
+    }
+    public LiveData<LoginStates> getState() {
+        return state;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void login() {
+        accountModel.login(
+                (result) -> {
+                    if (result.isSuccess()) {
+                        state.setValue(LoginStates.LOGGED);
+                    } else {
+                        state.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
+                        status = result.getMessage();
+                    }
+                },
+                (call, t) -> {
+                    state.setValue(LoginStates.CONNECTION_FAILED);
+                }
+        );
+    }
+
+    public void login(String login, String password) {
+        accountModel.setAccount(login, password);
+        login();
+    }
+
+    public void checkExist() {
+        if (accountModel.hasAccount()) {
+            state.setValue(LoginStates.LOGGING);
+            login();
+        } else {
+            state.setValue(LoginStates.NOT_FOUND);
+        }
+    }
+
+    public void initialize(Context context) {
+        accountModel.load(context);
+        accountModel.checkConnection(
+                () -> {
+                    state.setValue(LoginStates.CONNECTED);
+                    checkExist();
+                },
+                () -> state.setValue(LoginStates.CONNECTION_FAILED)
+        );
+    }
+}

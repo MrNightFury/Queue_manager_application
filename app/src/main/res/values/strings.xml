@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name" translatable="false">Queue Manager</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="main_fragment_label">Main page</string>
+    <string name="queue_list_fragment_label">Queue list</string>
+    <string name="menu_fragment_label">Options</string>
+    <string name="queue_peopleCount_label">"Peoples: "</string>
+    <string name="connection_wait_text">Trying to connect</string>
+    <string name="login_wait_text">Checking login</string>
+    <string name="login_field_hint">Login</string>
+    <string name="password_field_hint">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="signIn_button_text">Sign In</string>
+</resources>

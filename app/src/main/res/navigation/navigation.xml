@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.StartFragment"
+        android:label="@string/main_fragment_label"
+        tools:layout="@layout/fragment_start" />
+    <action
+        android:id="@+id/action_toHomeFragment"
+        app:destination="@id/startFragment" />
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.MenuFragment"
+        android:label="@string/menu_fragment_label"
+        tools:layout="@layout/fragment_menu" />
+    <fragment
+        android:id="@+id/queueListFragment"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.QueueListFragment"
+        android:label="@string/queue_list_fragment_label"
+        tools:layout="@layout/fragment_queue_list" />
+    <action
+        android:id="@+id/action_toQueueListFragment"
+        app:destination="@id/queueListFragment" />
+    <action
+        android:id="@+id/action_toMenuFragment"
+        app:destination="@id/menuFragment" />
+</navigation>

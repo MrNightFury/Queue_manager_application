@@ -1,0 +1,72 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+
+
+    <style name="Theme.QueueManager" parent="Theme.MaterialComponents.DayNight">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/cardBackground</item>
+        <item name="colorPrimaryVariant">@color/purple_200</item>
+        <item name="colorOnPrimary">@color/darkGrey</item>
+        <item name="background">@color/background</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+<!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
+        <!-- Customize your theme here. -->
+    </style>
+<!--    <style name="MyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">-->
+<!--        <item name="background">@color/material_dynamic_primary95</item>-->
+<!--    </style>-->
+<!--    <style name="Theme.QueueManager.Light" parent="Theme.Material3.DynamicColors.Light">-->
+<!--&lt;!&ndash;        <item name="background">@color/material_dynamic_neutral10</item>&ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="">@color/material_dynamic_primary40</item>&ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="dass">@color/material_dynamic_primary40</item>&ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="background">@color/material_dynamic_primary40</item>&ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="background">@color/material_dynamic_primary40</item>&ndash;&gt;-->
+<!--&lt;!&ndash;        <item name="background">@color/material_dynamic_primary40</item>&ndash;&gt;-->
+<!--        <item name="android:colorBackground">@color/material_dynamic_primary95</item>-->
+<!--        <item name="android:navigationBarColor">@color/material_dynamic_primary100</item>-->
+<!--        <item name="actionBarStyle">@style/MyActionBarStyle</item>-->
+<!--    </style>-->
+<!--    <style name="Theme.QueueManager.Dark" parent="Theme.Material3.DynamicColors.Light">-->
+<!--        <item name="background">@color/material_dynamic_neutral10</item>-->
+<!--    </style>-->
+<!--    <style name="Theme.QueueManager.Auto" parent="Theme.Material3.DynamicColors.Light">-->
+<!--        <item name="background">@color/material_dynamic_primary40</item>-->
+<!--    </style>-->
+
+<!--    <style-->
+<!--        name="Theme.QueueManager"-->
+<!--        parent="ThemeOverlay.Material3.DynamicColors.DayNight">-->
+<!--    </style>-->
+
+<!--    <style name="Theme.QueueManager" parent="Theme.Material3.DynamicColors.Light">-->
+<!--        <item name="colorPrimary">@android:color/system_accent1_600</item>-->
+<!--        <item name="colorOnPrimary">@android:color/system_accent1_0</item>-->
+<!--        <item name="colorSecondary">@android:color/system_accent2_600</item>-->
+<!--        <item name="colorOnSecondary">@android:color/system_accent2_0</item>-->
+<!--        <item name="colorTertiary">@android:color/system_accent3_600</item>-->
+<!--        <item name="colorOnTertiary">@android:color/system_accent3_0</item>-->
+<!--&lt;!&ndash;        <item name="colorBackground">@android:color/system_neutral1_10</item>&ndash;&gt;-->
+<!--        <item name="colorOnBackground">@android:color/system_neutral1_900</item>-->
+<!--    </style>-->
+
+
+<!--    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">-->
+<!--        <item name="colorPrimary">@color/md_theme_light_primary</item>-->
+<!--        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>-->
+<!--        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>-->
+<!--        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>-->
+<!--        <item name="colorError">@color/md_theme_light_error</item>-->
+<!--        <item name="colorOnError">@color/md_theme_light_onError</item>-->
+<!--        <item name="colorErrorContainer">@color/md_theme_light_errorContainer</item>-->
+<!--        <item name="colorOnErrorContainer">@color/md_theme_light_onErrorContainer</item>-->
+<!--        <item name="colorOnBackground">@color/md_theme_light_onSurface</item>-->
+<!--        <item name="colorSurface">@color/md_theme_light_surface</item>-->
+<!--        <item name="colorOnSurface">@color/md_theme_light_onSurface</item>-->
+<!--    </style>-->
+
+<!--    <style name="Theme.QueueManager" parent="android:Theme.Material.Light.NoActionBar" />-->
+</resources>
