@@ -3,19 +3,15 @@ package ru.mrnightfury.queuemanager.viewmodel;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.model.AccountModel;
-import ru.mrnightfury.queuemanager.model.networkAPI.NetworkService;
+import ru.mrnightfury.queuemanager.repository.model.LoginStates;
 
-public class LoginViewModel extends ViewModel {
+@Deprecated
+public class LoginViewModelOld extends ViewModel {
     private static String TAG = "LVM";
 
     private MutableLiveData<String> token = new MutableLiveData<>();
@@ -55,10 +51,13 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void checkExist() {
-        if (accountModel.hasAccount()) {
+        Boolean hasAccount = accountModel.hasAccount();
+        Log.i(TAG, hasAccount.toString());
+        if (hasAccount) {
             state.setValue(LoginStates.LOGGING);
             login();
         } else {
+            Log.i(TAG, "Странная херня");
             state.setValue(LoginStates.NOT_FOUND);
         }
     }

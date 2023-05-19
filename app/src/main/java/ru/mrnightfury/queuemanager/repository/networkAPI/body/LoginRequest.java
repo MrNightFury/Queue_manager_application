@@ -1,4 +1,4 @@
-package ru.mrnightfury.queuemanager.model.networkAPI;
+package ru.mrnightfury.queuemanager.repository.networkAPI.body;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

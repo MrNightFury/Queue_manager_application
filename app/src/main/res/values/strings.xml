@@ -12,4 +12,10 @@
     <string name="password_field_hint">Password</string>
     <string name="login_button_text">Login</string>
     <string name="signIn_button_text">Sign In</string>
+    <string name="connection_failed_text">Connection failed</string>
+    <string name="login_label">Login</string>
+    <string name="username_label">Username</string>
+    <string name="connection_check_label">Connection check</string>
+    <string name="loggingIn_wait_text">Logging in…</string>
+    <string name="retryConnection_button_text">Retry</string>
 </resources>

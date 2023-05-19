@@ -1,15 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.launchActivity.ConnectionCheckFragment">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="ru.mrnightfury.queuemanager.repository.model.LoginStates"/>
+        <import type="android.view.View"/>
+        <variable
+            name="loginState"
+            type="LiveData&lt;LoginStates>" />
+    </data>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/connection_info_text"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Connection check" />
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/connection_info_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/connection_wait_text"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/retryConnection_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/retryConnection_button_text"
+                android:visibility="@{loginState == LoginStates.CONNECTION_FAILED ? View.VISIBLE : View.GONE}" />
+
+        </LinearLayout>
+
+        <!--            android:text="@string/connection_check_label" />-->
+
+    </LinearLayout>
+</layout>

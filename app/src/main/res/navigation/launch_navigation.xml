@@ -24,7 +24,9 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginSucceeded"
-            app:destination="@id/mainActivity" />
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/launch_navigation"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_signInRequired"
             app:destination="@id/signInFragment" />

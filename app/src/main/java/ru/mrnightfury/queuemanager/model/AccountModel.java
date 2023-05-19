@@ -1,33 +1,31 @@
 package ru.mrnightfury.queuemanager.model;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import kotlin.jvm.internal.Lambda;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.mrnightfury.queuemanager.R;
-import ru.mrnightfury.queuemanager.model.networkAPI.LoginRequest;
-import ru.mrnightfury.queuemanager.model.networkAPI.NetworkService;
-import ru.mrnightfury.queuemanager.model.networkAPI.QueueManagerAPI;
-import ru.mrnightfury.queuemanager.model.networkAPI.Result;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkService;
+import ru.mrnightfury.queuemanager.repository.networkAPI.QueueManagerAPI;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 
 public class AccountModel {
+    private static final String TAG = "AM";
     private SharedPreferences sharedPrefs;
     private String login;
     private String password;
     private String token;
-    private QueueManagerAPI API;
+
+    private User user;
+    private final QueueManagerAPI API;
 
     private static AccountModel instance = null;
-    private static String loginKey = "login_key";
-    private static String passwordKey = "password_key";
-    private static String tokenKey = "token_key";
+    private static final String loginKey = "login_key";
+    private static final String passwordKey = "password_key";
+//    private static String tokenKey = "token_key";
 
     public static AccountModel getInstance() {
         if (instance == null) {
@@ -41,15 +39,17 @@ public class AccountModel {
                 .getJSONApi();
     }
 
-    public void load (Context context){
+    public void load (Context context) {
         sharedPrefs = context.getApplicationContext()
                 .getSharedPreferences("queue_manager.account", Context.MODE_PRIVATE);
         login = sharedPrefs.getString(loginKey, null);
         password = sharedPrefs.getString(passwordKey, null);
     }
 
-    public boolean hasAccount(){
-        return login != null && password != null;
+    public boolean hasAccount() {
+        Log.i("AM", (Boolean.valueOf(login != null && password != null)).toString() + login + password);
+//        return login != null && password != null;
+        return false;
     }
 
     public void setAccount(String login, String password) {
@@ -62,6 +62,8 @@ public class AccountModel {
         editor.putString(loginKey, login);
         editor.putString(passwordKey, password);
         editor.apply();
+        Log.i(TAG, "Account saved");
+        Log.i(TAG, sharedPrefs.getString(loginKey, "failed"));
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
@@ -91,6 +93,7 @@ public class AccountModel {
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.body().isSuccess()) {
                     token = response.body().getMessage();
+                    saveAccount();
                 }
                 onResultGetCallback.onResult(response.body());
             }
@@ -99,6 +102,24 @@ public class AccountModel {
                 onFailureCallback.onFailure(call, t);
             }
         });
+    }
+
+    public void getAccount(onResultGetCallback<User> onResultGetCallback, onFailureCallback<User> onFailureCallback) {
+        if (user == null) {
+            API.getUser(login).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    onResultGetCallback.onResult(response.body());
+                    user = response.body();
+                }
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    onFailureCallback.onFailure(call, t);
+                }
+            });
+        } else {
+            onResultGetCallback.onResult(user);
+        }
     }
 
     public interface OnCheckCallback {
