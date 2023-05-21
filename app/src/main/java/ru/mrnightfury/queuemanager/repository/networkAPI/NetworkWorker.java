@@ -6,9 +6,12 @@ import android.util.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.mrnightfury.queuemanager.model.User;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
 
 public class NetworkWorker {
     private static String TAG = "NW";
@@ -27,7 +30,7 @@ public class NetworkWorker {
 
     private QueueManagerAPI API;
     private NetworkWorker() {
-//        API = NetworkService.getInstance().getJSONApi();
+
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
@@ -43,18 +46,6 @@ public class NetworkWorker {
                 onFailure.run();
             }
         }, URLs);
-//        checkConnection(onSuccess, onFailure, 0);
-//        API.checkConnection().enqueue(new Callback<>() {
-//            @Override
-//            public void onResponse(Call<Object> call, Response<Object> response) {
-//                onSuccess.run();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Object> call, Throwable t) {
-////                onFailure.run();
-//            }
-//        });
     }
 
     public void logIn(AccountModel account, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
@@ -67,6 +58,37 @@ public class NetworkWorker {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void createAccount(UserCreateRequest request, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
+        Log.i(TAG, "Create Account request");
+        API.createUser(request).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                onSuccess.onResult(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void getUser(String login, OnSuccess<UserResponse> onSuccess, OnFailure<UserResponse> onFailure) {
+        Log.i(TAG, "User get request");
+        API.getUser(login).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                Log.i(TAG, "Login get response");
+                onSuccess.onResult(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
         });

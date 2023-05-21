@@ -5,11 +5,14 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Objects;
+
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkService;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
 import ru.mrnightfury.queuemanager.repository.networkAPI.QueueManagerAPI;
 import ru.mrnightfury.queuemanager.repository.model.LoginStates;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 
 public class AccountRepository {
     private static AccountRepository instance;
@@ -21,16 +24,20 @@ public class AccountRepository {
         return instance;
     }
 
-    private AccountModel model;
+    private LiveData<AccountModel> model;
     private QueueManagerAPI API;
     private SharedPrefsWorker sharedPrefs;
     private MutableLiveData<LoginStates> loginState = new MutableLiveData<>(LoginStates.NONE);
     private NetworkWorker worker;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
 
     private AccountRepository() {
         sharedPrefs = SharedPrefsWorker.getInstance();
-        model = new AccountModel();
-//        API = NetworkService.getInstance().getJSONApi();
+        model = AccountModel.getInstance();
         worker = NetworkWorker.getInstance();
 
         String login = sharedPrefs.getLogin();
@@ -38,20 +45,19 @@ public class AccountRepository {
         String token = sharedPrefs.getToken();
 
         if (login != null && password != null) {
-            model.setAccount(login, password);
-//            loginState.setValue(LoginStates.LOGGING);
+            model.getValue().setAccount(login, password);
         }
         if (token != null) {
-            model.setToken(token);
+            model.getValue().setToken(token);
         }
     }
 
-    public LiveData<LoginStates> getLoginState() {
+    public MutableLiveData<LoginStates> getLoginState() {
         return loginState;
     }
 
     public void connect() {
-        loginState.setValue(LoginStates.NONE);
+        loginState.setValue(LoginStates.CONNECTION_CHECKING);
         worker.checkConnection(
                 () -> {
                     loginState.setValue(LoginStates.CONNECTED);
@@ -64,19 +70,24 @@ public class AccountRepository {
     }
 
     public void checkExist() {
-        if (model.hasAccount()) {
-            loginState.setValue(LoginStates.LOGGING);
+        if (model.getValue().hasAccount()) {
             login();
         } else {
             loginState.setValue(LoginStates.NOT_FOUND);
         }
     }
 
+    public void setAccount(String login, String password) {
+        model.getValue().setAccount(login, password);
+    }
+
     public void login() {
-        worker.logIn(model,
+        Log.i("TEST", "3");
+        loginState.setValue(LoginStates.LOGGING);
+        worker.logIn(model.getValue(),
                 result -> {
                     if (result.isSuccess()) {
-                        model.setToken(result.getMessage());
+                        model.getValue().setToken(result.getMessage());
                         loginState.setValue(LoginStates.LOGGED);
                     } else {
                         loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
@@ -85,5 +96,37 @@ public class AccountRepository {
                 (call, t) -> {
                     loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
                 });
+    }
+
+    public void createAccount(String login, String username, String password) {
+        worker.createAccount(
+                new UserCreateRequest(login, password, username),
+                result -> {
+                    if (result.isSuccess()) {
+                        Log.i(TAG, "Account create result success");
+                        model.getValue().setAccount(login, password);
+                        login();
+                    } else {
+                        status = result.getMessage();
+                        loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
+                    }
+                },
+                ((call, t) -> {
+                    Log.i(TAG, "Error during account create");
+//                    loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
+                })
+        );
+    }
+
+    public void loadData() {
+        worker.getUser(model.getValue().getLogin(),
+                (user) -> {
+                    model.getValue().setUserResponse(user);
+                },
+                (call ,t) -> {});
+    }
+
+    public LiveData<AccountModel> getAccount() {
+        return model;
     }
 }

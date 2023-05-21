@@ -14,10 +14,6 @@ public class NetworkService {
     private Retrofit mRetrofit = null;
     private static final String BASE_URL = "http://ipservera:port/";
 
-    private NetworkService() {
-
-    }
-
     public static NetworkService getInstance() {
         if (mInstance == null) {
             mInstance = new NetworkService();
@@ -47,7 +43,6 @@ public class NetworkService {
                                 callback.onResponse(call, response);
                             }
                         }
-
                         @Override
                         public void onFailure(Call<Object> call, Throwable t) {
                             Log.i(TAG, "Failed to connected to " + URL);

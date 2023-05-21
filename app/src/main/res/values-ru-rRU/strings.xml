@@ -10,4 +10,10 @@
     <string name="password_field_hint">Пароль</string>
     <string name="login_button_text">Войти</string>
     <string name="signIn_button_text">Зарегистрироваться</string>
+    <string name="connection_failed_text">Не удалось подключиться</string>
+    <string name="login_label">Логин</string>
+    <string name="username_label">Имя пользователя</string>
+    <string name="loggingIn_wait_text">Вход...</string>
+    <string name="retryConnection_button_text">Повторить попытку</string>
+    <string name="username_field_hint">Имя пользователя</string>
 </resources>

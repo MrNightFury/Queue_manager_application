@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_connection_check" >
         <action
             android:id="@+id/action_loginNeeded"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_connectionSucceeded"
             app:destination="@id/mainActivity" />
@@ -25,8 +26,7 @@
         <action
             android:id="@+id/action_loginSucceeded"
             app:destination="@id/mainActivity"
-            app:popUpTo="@id/launch_navigation"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_signInRequired"
             app:destination="@id/signInFragment" />
@@ -43,6 +43,7 @@
         tools:layout="@layout/fragment_sign_in" >
         <action
             android:id="@+id/action_signInSucceeded"
-            app:destination="@id/mainActivity" />
+            app:destination="@id/mainActivity"
+            app:popUpToInclusive="false" />
     </fragment>
 </navigation>

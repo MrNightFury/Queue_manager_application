@@ -2,7 +2,8 @@
     <!-- Base application theme. -->
 
 
-    <style name="Theme.QueueManager" parent="Theme.MaterialComponents.DayNight">
+<!--    <style name="Theme.QueueManager" parent="Theme.MaterialComponents.DayNight">-->
+    <style name="Theme.QueueManager" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/cardBackground</item>
         <item name="colorPrimaryVariant">@color/purple_200</item>

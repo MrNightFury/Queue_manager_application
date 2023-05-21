@@ -18,4 +18,10 @@
     <string name="connection_check_label">Connection check</string>
     <string name="loggingIn_wait_text">Logging in…</string>
     <string name="retryConnection_button_text">Retry</string>
+    <string name="username_field_hint">Username</string>
+    <string name="login_contains_bad_chars">Login contains bad chars</string>
+    <string name="password_contains_bad_chars">Password contains bad chars</string>
+    <string name="username_contains_bad_chars">Username contains bad chars</string>
+    <string name="short_login_error">Login is too short</string>
+    <string name="short_password_error">Password is too short</string>
 </resources>

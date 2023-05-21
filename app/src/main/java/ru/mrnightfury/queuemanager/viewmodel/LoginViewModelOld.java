@@ -30,46 +30,46 @@ public class LoginViewModelOld extends ViewModel {
     }
 
     public void login() {
-        accountModel.login(
-                (result) -> {
-                    if (result.isSuccess()) {
-                        state.setValue(LoginStates.LOGGED);
-                    } else {
-                        state.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
-                        status = result.getMessage();
-                    }
-                },
-                (call, t) -> {
-                    state.setValue(LoginStates.CONNECTION_FAILED);
-                }
-        );
+//        accountModel.login(
+//                (result) -> {
+//                    if (result.isSuccess()) {
+//                        state.setValue(LoginStates.LOGGED);
+//                    } else {
+//                        state.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
+//                        status = result.getMessage();
+//                    }
+//                },
+//                (call, t) -> {
+//                    state.setValue(LoginStates.CONNECTION_FAILED);
+//                }
+//        );
     }
 
     public void login(String login, String password) {
-        accountModel.setAccount(login, password);
-        login();
+//        accountModel.setAccount(login, password);
+//        login();
     }
 
     public void checkExist() {
-        Boolean hasAccount = accountModel.hasAccount();
-        Log.i(TAG, hasAccount.toString());
-        if (hasAccount) {
-            state.setValue(LoginStates.LOGGING);
-            login();
-        } else {
-            Log.i(TAG, "Странная херня");
-            state.setValue(LoginStates.NOT_FOUND);
-        }
+//        Boolean hasAccount = accountModel.hasAccount();
+//        Log.i(TAG, hasAccount.toString());
+//        if (hasAccount) {
+//            state.setValue(LoginStates.LOGGING);
+//            login();
+//        } else {
+//            Log.i(TAG, "Странная херня");
+//            state.setValue(LoginStates.NOT_FOUND);
+//        }
     }
 
     public void initialize(Context context) {
-        accountModel.load(context);
-        accountModel.checkConnection(
-                () -> {
-                    state.setValue(LoginStates.CONNECTED);
-                    checkExist();
-                },
-                () -> state.setValue(LoginStates.CONNECTION_FAILED)
-        );
+//        accountModel.load(context);
+//        accountModel.checkConnection(
+//                () -> {
+//                    state.setValue(LoginStates.CONNECTED);
+//                    checkExist();
+//                },
+//                () -> state.setValue(LoginStates.CONNECTION_FAILED)
+//        );
     }
 }

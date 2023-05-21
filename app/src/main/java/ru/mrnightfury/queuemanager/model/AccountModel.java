@@ -11,7 +11,9 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkService;
 import ru.mrnightfury.queuemanager.repository.networkAPI.QueueManagerAPI;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
 
+@Deprecated
 public class AccountModel {
     private static final String TAG = "AM";
     private SharedPreferences sharedPrefs;
@@ -19,7 +21,7 @@ public class AccountModel {
     private String password;
     private String token;
 
-    private User user;
+    private UserResponse user;
     private final QueueManagerAPI API;
 
     private static AccountModel instance = null;
@@ -39,6 +41,7 @@ public class AccountModel {
                 .getJSONApi();
     }
 
+    @Deprecated
     public void load (Context context) {
         sharedPrefs = context.getApplicationContext()
                 .getSharedPreferences("queue_manager.account", Context.MODE_PRIVATE);
@@ -104,16 +107,16 @@ public class AccountModel {
         });
     }
 
-    public void getAccount(onResultGetCallback<User> onResultGetCallback, onFailureCallback<User> onFailureCallback) {
+    public void getAccount(onResultGetCallback<UserResponse> onResultGetCallback, onFailureCallback<UserResponse> onFailureCallback) {
         if (user == null) {
             API.getUser(login).enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                     onResultGetCallback.onResult(response.body());
                     user = response.body();
                 }
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<UserResponse> call, Throwable t) {
                     onFailureCallback.onFailure(call, t);
                 }
             });
