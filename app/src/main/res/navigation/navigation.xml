@@ -22,11 +22,19 @@
         android:id="@+id/queueListFragment"
         android:name="ru.mrnightfury.queuemanager.view.mainActivity.QueueListFragment"
         android:label="@string/queue_list_fragment_label"
-        tools:layout="@layout/fragment_queue_list" />
+        tools:layout="@layout/fragment_queue_list" >
+        <action
+            android:id="@+id/action_openQueueFromList"
+            app:destination="@id/queueFragment" />
+    </fragment>
     <action
         android:id="@+id/action_toQueueListFragment"
         app:destination="@id/queueListFragment" />
     <action
         android:id="@+id/action_toMenuFragment"
         app:destination="@id/menuFragment" />
+    <fragment
+        android:id="@+id/queueFragment"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.QueueFragment"
+        android:label="QueueFragment" />
 </navigation>

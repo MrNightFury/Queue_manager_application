@@ -19,11 +19,13 @@ import android.view.ViewGroup;
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.FragmentConnectionCheckBinding;
 import ru.mrnightfury.queuemanager.databinding.FragmentStartBinding;
+import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
 public class StartFragment extends Fragment {
     FragmentStartBinding binding;
-    LoginViewModel loginVM;
+//    LoginViewModel loginVM;
+    AccountViewModel accountVM;
     NavController navController;
 
     @Override
@@ -42,7 +44,7 @@ public class StartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginVM = new ViewModelProvider(this).get(LoginViewModel.class);
+        accountVM = new ViewModelProvider(this).get(AccountViewModel.class);
         navController = Navigation.findNavController(view);
 
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
@@ -50,7 +52,7 @@ public class StartFragment extends Fragment {
             public void handleOnBackPressed() {
                 NavDestination dest = navController.getCurrentDestination();
                 if (dest != null && dest.getId() == R.id.startFragment) {
-                    loginVM.exit();
+                    accountVM.exit();
                     getActivity().finishAffinity();
                 } else {
                     navController.navigateUp();

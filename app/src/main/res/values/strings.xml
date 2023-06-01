@@ -24,4 +24,5 @@
     <string name="username_contains_bad_chars">Username contains bad chars</string>
     <string name="short_login_error">Login is too short</string>
     <string name="short_password_error">Password is too short</string>
+    <string name="loading_placeholder_text">Loading...</string>
 </resources>

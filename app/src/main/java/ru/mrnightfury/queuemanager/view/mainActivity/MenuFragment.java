@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -28,7 +29,6 @@ import ru.mrnightfury.queuemanager.viewmodel.SettingsViewModel;
 public class MenuFragment extends Fragment {
     SettingsViewModel settingsVM;
     AccountViewModel accountVM;
-    LoginViewModel loginVM;
     FragmentMenuBinding binding;
     LiveData<AccountModel> account;
     NavController navController;
@@ -60,5 +60,18 @@ public class MenuFragment extends Fragment {
         });
         accountVM.loadUser();
 //        TextView loginView = view.findViewById();
+
+        getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavDestination dest = navController.getCurrentDestination();
+                if (dest != null && dest.getId() == R.id.startFragment) {
+                    accountVM.exit();
+                    getActivity().finishAffinity();
+                } else {
+                    navController.navigateUp();
+                }
+            }
+        });
     }
 }

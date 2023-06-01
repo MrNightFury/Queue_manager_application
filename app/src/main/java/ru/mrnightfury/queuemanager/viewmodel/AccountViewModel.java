@@ -19,4 +19,8 @@ public class AccountViewModel extends ViewModel {
             repository.loadData();
         }
     }
+
+    public void exit() {
+        repository.exit();
+    }
 }

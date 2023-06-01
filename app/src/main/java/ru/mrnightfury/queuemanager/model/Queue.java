@@ -3,6 +3,7 @@ package ru.mrnightfury.queuemanager.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Deprecated
 public class Queue {
     private static class Config {
         @SerializedName("owner")

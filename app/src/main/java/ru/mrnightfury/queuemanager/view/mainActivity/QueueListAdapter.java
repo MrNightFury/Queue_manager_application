@@ -1,6 +1,8 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,42 +12,46 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.mrnightfury.queuemanager.R;
-import ru.mrnightfury.queuemanager.model.Queue;
+//import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
+import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
 
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder> {
-    private final LayoutInflater inflater;
-    private final List<Queue> queues;
+//    QueueListItemLayoutBinding binding;
+//    private final LayoutInflater inflater;
+    private final ArrayList<Queue> queues;
     OnClickListener listener = null;
 
     interface OnClickListener {
         void onClick (Queue item, int position);
     }
 
-    QueueListAdapter(Context context, int resource, List<Queue> queues) {
+    public QueueListAdapter(ArrayList<Queue> queues) {
         this.queues = queues;
-        this.inflater = LayoutInflater.from(context);
     }
 
-    public void setOnItemClickListener (OnClickListener listener) {
-        this.listener = listener;
-    }
-
-    @NonNull
     @Override
-    public QueueListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.queue_list_item_layout, parent, false);
-        return new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        View view = inflater.inflate(R.layout.queue_list_item_layout, parent, false);
+//        view.setOnClickListener(v -> Log.i("DSA", "HIBBHIBHI"));
+//        Log.i("ASSD", "ADSSA....");
+        return new ViewHolder(
+                QueueListItemLayoutBinding.inflate(
+                        LayoutInflater.from(parent.getContext()), parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull QueueListAdapter.ViewHolder holder, int position) {
         Queue queue = queues.get(position);
-        holder.name.setText(queue.getName());
-        holder.peopleCount.setText(queue.getDescription());
-//        holder.image.setImageResource(R.drawable.broccoli);
+        QueueListItemLayoutBinding binding = holder.getBinding();
+        binding.queueName.setText(queue.getName());
+        binding.queueDescription.setText(queue.getDescription());
+        binding.queuePeopleCount.setText(Integer.toString(queue.getQueuedPeople().length));
 
         holder.itemView.setOnClickListener(view -> {
             if (listener != null) {
@@ -59,14 +65,19 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         return queues.size();
     }
 
+    public void setOnItemClickListener (OnClickListener listener) {
+        this.listener = listener;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView name, peopleCount;
-        final ImageView image;
-        ViewHolder(View view){
-            super(view);
-            name = view.findViewById(R.id.queue_name);
-            peopleCount = view.findViewById(R.id.queue_people_count);
-            image = view.findViewById(R.id.queue_star);
+        QueueListItemLayoutBinding binding;
+        ViewHolder(QueueListItemLayoutBinding binding){
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        QueueListItemLayoutBinding getBinding() {
+            return binding;
         }
     }
 }
