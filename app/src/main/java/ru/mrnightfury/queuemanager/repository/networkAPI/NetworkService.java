@@ -12,7 +12,7 @@ public class NetworkService {
     private static NetworkService mInstance;
     private static String TAG = "NS";
     private Retrofit mRetrofit = null;
-    private static final String BASE_URL = "http://ipservera:port/";
+//    private static final String BASE_URL = "http://ipservera:port/";
 
     public static NetworkService getInstance() {
         if (mInstance == null) {
@@ -40,13 +40,13 @@ public class NetworkService {
                             Log.i(TAG, "Successfully connected to " + URL);
                             if (mRetrofit == null) {
                                 mRetrofit = retrofit;
-                                callback.onResponse(call, response);
                             }
+                            callback.onResponse(call, response);
                         }
                         @Override
                         public void onFailure(Call<Object> call, Throwable t) {
-                            Log.i(TAG, "Failed to connected to " + URL);
                             counter[0]++;
+                            Log.i(TAG, "Failed to connected to " + URL + " " + counter[0] + "/" + URLs.length);
                             if (counter[0] == URLs.length) {
                                 callback.onFailure(call, t);
                             }

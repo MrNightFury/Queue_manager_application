@@ -1,9 +1,13 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -12,13 +16,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.mrnightfury.queuemanager.R;
+import ru.mrnightfury.queuemanager.repository.AccountRepository;
+import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
 public class MainActivity extends AppCompatActivity {
+    NavController navController;
+    LoginViewModel loginVM;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     @Nullable
     @Override
     public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-        return super.onCreateView(parent, name, context, attrs);
+        View view = super.onCreateView(parent, name, context, attrs);
+        loginVM = new ViewModelProvider(this).get(LoginViewModel.class);
+        return view;
     }
 }

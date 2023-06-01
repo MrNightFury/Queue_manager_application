@@ -9,6 +9,7 @@ import retrofit2.Response;
 import ru.mrnightfury.queuemanager.model.User;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
@@ -18,7 +19,8 @@ public class NetworkWorker {
     private static NetworkWorker instance;
     private static String[] URLs = {
             "http://10.0.2.2:8000/", // Для эмулятора
-            "http://192.168.1.128:8000/"
+            "http://192.168.1.128:8000/",
+            "http://192.168.137.216:8000"
     };
 
     public static NetworkWorker getInstance() {
@@ -34,9 +36,10 @@ public class NetworkWorker {
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
-        NetworkService.getInstance().connect(new Callback<Object>() {
+        NetworkService.getInstance().connect(new Callback<>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
+//                Log.i("dasdSA", "UYGGHYUYGYU");
                 API = NetworkService.getInstance().getJSONApi();
                 onSuccess.run();
             }
@@ -53,11 +56,13 @@ public class NetworkWorker {
                 .enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i(TAG, "JWT get response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
+                Log.i(TAG, "Failed to get JWT");
                 onFailure.onFailure(call, t);
             }
         });
@@ -68,11 +73,13 @@ public class NetworkWorker {
         API.createUser(request).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i(TAG, "Create Account response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
+                Log.i(TAG, "Failed to Post Create Account");
                 onFailure.onFailure(call, t);
             }
         });
@@ -89,6 +96,24 @@ public class NetworkWorker {
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.i(TAG, "Failed to get User");
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void loadQueues(OnSuccess<Queue[]> onSuccess, OnFailure<Queue[]> onFailure) {
+        Log.i(TAG, "Queues get request");
+        API.getQueues().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Queue[]> call, Response<Queue[]> response) {
+                Log.i(TAG, "Queue get response");
+                onSuccess.onResult(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Queue[]> call, Throwable t) {
+                Log.i(TAG, "Failed to get Queues");
                 onFailure.onFailure(call, t);
             }
         });
