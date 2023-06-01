@@ -16,7 +16,7 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 
 public class AccountRepository {
     private static AccountRepository instance;
-    private static String TAG = "AR";
+    private static final String TAG = "AR";
     public static AccountRepository getInstance() {
         if (instance == null) {
             instance = new AccountRepository();
@@ -25,8 +25,8 @@ public class AccountRepository {
     }
 
     private LiveData<AccountModel> model;
-    private QueueManagerAPI API;
-    private SharedPrefsWorker sharedPrefs;
+//    private QueueManagerAPI API;
+    private final SharedPrefsWorker sharedPrefs;
     private MutableLiveData<LoginStates> loginState = new MutableLiveData<>(LoginStates.NONE);
     private NetworkWorker worker;
     private String status;
@@ -60,6 +60,7 @@ public class AccountRepository {
         loginState.setValue(LoginStates.CONNECTION_CHECKING);
         worker.checkConnection(
                 () -> {
+//                    Log.i("ASD", "ASSDASDASD");
                     loginState.setValue(LoginStates.CONNECTED);
                     checkExist();
                 },
@@ -82,12 +83,12 @@ public class AccountRepository {
     }
 
     public void login() {
-        Log.i("TEST", "3");
         loginState.setValue(LoginStates.LOGGING);
         worker.logIn(model.getValue(),
                 result -> {
                     if (result.isSuccess()) {
                         model.getValue().setToken(result.getMessage());
+                        sharedPrefs.saveAccount(model.getValue().getLogin(), model.getValue().getPassword());
                         loginState.setValue(LoginStates.LOGGED);
                     } else {
                         loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
@@ -128,5 +129,9 @@ public class AccountRepository {
 
     public LiveData<AccountModel> getAccount() {
         return model;
+    }
+
+    public void exit() {
+        loginState.setValue(LoginStates.NONE);
     }
 }

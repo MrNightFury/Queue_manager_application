@@ -38,6 +38,10 @@ public class LoginViewModel extends ViewModel {
         repository.login();
     }
 
+    public void exit() {
+        repository.exit();
+    }
+
     public void createAccount(String login, String password, String username) {
         if (!login.matches("[a-zA-Z0-9_]*")) {
             hint.setValue(R.string.login_contains_bad_chars);

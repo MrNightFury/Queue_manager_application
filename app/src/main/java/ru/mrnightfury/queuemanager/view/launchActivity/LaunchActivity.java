@@ -17,10 +17,4 @@ public class LaunchActivity extends AppCompatActivity {
 //        new ViewModelProvider(this);
 
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
 }

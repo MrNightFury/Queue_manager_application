@@ -1,5 +1,6 @@
 package ru.mrnightfury.queuemanager.view.launchActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import androidx.navigation.Navigation;
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.FragmentConnectionCheckBinding;
 import ru.mrnightfury.queuemanager.repository.model.LoginStates;
+import ru.mrnightfury.queuemanager.view.mainActivity.MainActivity;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
 public class ConnectionCheckFragment extends Fragment {
+    private static final String TAG = "CChF";
     private LiveData<LoginStates> state;
     private LoginViewModel accountVM;
     private NavController navController;
@@ -51,6 +54,10 @@ public class ConnectionCheckFragment extends Fragment {
             accountVM.connect();
         });
 
+        binding.checkLoginStateButton.setOnClickListener(view1 -> {
+            Log.i(TAG, state.getValue().name());
+        });
+
         state.observe(getViewLifecycleOwner(), newState -> {
             final String TAG = "LSObserver";
             Log.i(TAG, newState.name());
@@ -60,6 +67,7 @@ public class ConnectionCheckFragment extends Fragment {
                     break;
                 case CONNECTION_CHECKING:
                     binding.connectionInfoText.setText(R.string.connection_wait_text);
+                    break;
                 case CONNECTED:
                     binding.connectionInfoText.setText(R.string.login_wait_text);
                     break;
@@ -69,7 +77,8 @@ public class ConnectionCheckFragment extends Fragment {
                             .show();
                     break;
                 case LOGGED:
-                    navController.navigate(R.id.action_connectionSucceeded);
+//                    navController.navigate(R.id.action_connectionSucceeded);
+                    startActivity(new Intent(getContext(), MainActivity.class));
                     break;
                 case NOT_FOUND:
                 case INCORRECT_LOGIN_OR_PASSWORD:
@@ -78,6 +87,13 @@ public class ConnectionCheckFragment extends Fragment {
                 case LOGGING:
                     binding.connectionInfoText.setText(R.string.loggingIn_wait_text);
                     break;
+                case EXIT:
+                    accountVM.connect();
+//                    navController.navigateUp();
+//                    getActivity().finish();
+//                    getActivity().finishAffinity();
+                    break;
+
 //                case WAITING_FOR_USER:
 //                    navController.popBackStack();
 //                    break;
