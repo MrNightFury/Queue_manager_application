@@ -119,7 +119,7 @@ public class QueuesRepository {
 //            chosenQueue.getValue().getQueuedPeople().get(i).setUsername("ASD");
             if (username != null) {
                 u.setUsername(username);
-            } else {
+            } else if (!Objects.equals(u.getType(), "NOT_LOGGED")) {
                 worker.getUser(u.getLogin(),
                         result -> {
                             cache.setUsername(u.getLogin(), result.getUsername());

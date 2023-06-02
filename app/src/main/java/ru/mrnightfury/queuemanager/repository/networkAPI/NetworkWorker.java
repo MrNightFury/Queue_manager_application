@@ -95,7 +95,7 @@ public class NetworkWorker {
     }
 
     public void getUser(String login, OnSuccess<UserResponse> onSuccess, OnFailure<UserResponse> onFailure) {
-        Log.i(TAG, "User get request");
+        Log.i(TAG, "User " + login + " get request");
         API.getUser(login).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {

@@ -60,6 +60,10 @@ public class ConnectionCheckFragment extends Fragment {
 
         state.observe(getViewLifecycleOwner(), newState -> {
             final String TAG = "LSObserver";
+            if (navController.getCurrentDestination().getId() != R.id.connectionCheckFragment) {
+                Log.wtf(TAG, "Какого хера");
+                return;
+            }
             Log.i(TAG, newState.name());
             switch (newState) {
                 case NONE:

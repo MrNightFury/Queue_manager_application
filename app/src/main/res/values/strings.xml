@@ -26,4 +26,8 @@
     <string name="short_password_error" translatable="false">Password is too short</string>
     <string name="loading_placeholder_text" translatable="false">Loading...</string>
     <string name="favourite_button_hint" translatable="false">Add to favourite</string>
+    <string name="joinQueue_button_text" translatable="false">Join</string>
+    <string name="leaveQueue_button_text" translatable="false">Leave</string>
+    <string name="popQueue_button_text" translatable="false">Pop first</string>
+    <string name="freezeInQueue_button_text" translatable="false">Freeze me</string>
 </resources>

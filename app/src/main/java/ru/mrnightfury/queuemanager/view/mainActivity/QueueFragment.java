@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import java.util.ArrayList;
 
@@ -91,6 +92,13 @@ public class QueueFragment extends Fragment {
 //            adapter.notifyDataSetChanged();
 //        });
 
+        binding.setIsUserInQueue(queueVM.getIsUserInQueue());
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+
+//        queueVM.getIsUserInQueue().observe(getViewLifecycleOwner(), b -> {
+//            Log.i("ASDAS", Boolean.toString(b));
+//        });
+
         queueVM.subscribe();
 
         binding.queueSwipeLayout.setOnRefreshListener(() -> {
@@ -99,6 +107,22 @@ public class QueueFragment extends Fragment {
 
         queueVM.getPeopleChangedTrigger().observe(getViewLifecycleOwner(), v -> {
             queueVM.updatePeopleList();
+        });
+
+        binding.queuedPeopleList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (binding.queuedPeopleList.getChildAt(0) != null) {
+                    binding.queueSwipeLayout.setEnabled(
+                            binding.queuedPeopleList.getFirstVisiblePosition() == 0
+                                    && binding.queuedPeopleList.getChildAt(0).getTop() == 0);
+                }
+            }
         });
 //        queue.getValue().getQueuedPeople()
     }
