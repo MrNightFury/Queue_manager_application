@@ -46,7 +46,11 @@ public class QueueViewModel extends ViewModel {
         return this.users;
     }
 
-    public Queue c() {
-        return repository.c();
+    public void subscribe() {
+        repository.subscribe();
+    }
+
+    public void cancelSubscribe() {
+        repository.cancelSubscribe();
     }
 }

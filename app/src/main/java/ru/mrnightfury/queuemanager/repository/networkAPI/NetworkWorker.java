@@ -145,12 +145,14 @@ public class NetworkWorker {
         });
     }
 
-    public void watchQueue(String queueId, OnMessage listener){
-        Request request = new Request.Builder().url(connectedURL + "sse").build();
-        ServerSentEvent sse = oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
+    public ServerSentEvent watchQueue(String queueId, OnMessage listener){
+        Request request = new Request.Builder()
+                .url(connectedURL + "queue/" + queueId + "/subscribe")
+                .build();
+        return oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
             @Override
             public void onOpen(ServerSentEvent sse, okhttp3.Response response) {
-
+                Log.i("SSE", "SSE channel opened");
             }
 
             @Override
@@ -179,7 +181,7 @@ public class NetworkWorker {
             @WorkerThread
             @Override
             public void onClosed(ServerSentEvent sse) {
-                // Channel closed
+                Log.i("SSE", "SSE channel closed");
             }
 
             @Override
@@ -187,6 +189,7 @@ public class NetworkWorker {
                 return null;
             }
         });
+//        return sse;
     }
 
     public interface OnSuccess<E> {
@@ -195,7 +198,7 @@ public class NetworkWorker {
     public interface OnFailure<E> {
         void onFailure(Call<E> call, Throwable t);
     }
-    interface OnMessage {
+    public interface OnMessage {
         public void run(ServerSentEvent sse, String id, String event, String message);
     }
 }

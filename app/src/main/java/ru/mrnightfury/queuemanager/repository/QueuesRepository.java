@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.here.oksse.ServerSentEvent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -29,7 +31,8 @@ public class QueuesRepository {
     private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
-    UsernameCache cache = new UsernameCache();
+    private UsernameCache cache = new UsernameCache();
+    ServerSentEvent queueSSE;
 
     private QueuesRepository() {
         worker = NetworkWorker.getInstance();
@@ -98,6 +101,7 @@ public class QueuesRepository {
                 q -> {
                     Queue newQ = new Queue(q);
                     chosenQueue.getValue().setQueuedPeople(newQ.getQueuedPeople());
+                    loadUsernames();
                     peopleChangedTrigger.setValue(true);
                 },
                 (call, t) -> {});
@@ -131,6 +135,17 @@ public class QueuesRepository {
             }
         }
 
+    }
+
+    public void subscribe() {
+        queueSSE = worker.watchQueue(chosenQueue.getValue().getId(), (sse, id, event, message) -> {
+            updateChosenQueuePeopleList();
+//            Log.i(TAG, "Queue updated");
+        });
+    }
+
+    public void cancelSubscribe() {
+        queueSSE.close();
     }
 
 //    @Nullable

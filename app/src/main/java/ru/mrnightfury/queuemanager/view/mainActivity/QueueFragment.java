@@ -26,7 +26,7 @@ import ru.mrnightfury.queuemanager.viewmodel.QueueViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueFragment extends Fragment {
-    private static String TAG = "QF";
+    private static final String TAG = "QF";
     private FragmentQueueBinding binding;
 //    @Deprecated
 //    private QueuesViewModel queuesVM;
@@ -76,11 +76,11 @@ public class QueueFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
-        binding.queueStar.setOnClickListener(v -> {
-            for (Queue.User u : queueVM.c().getQueuedPeople()) {
-                Log.i("ASD", u.getUsername() == null ? "null" : u.getUsername());
-            }
-        });
+//        binding.queueStar.setOnClickListener(v -> {
+//            for (Queue.User u : queueVM.c().getQueuedPeople()) {
+//                Log.i("ASD", u.getUsername() == null ? "null" : u.getUsername());
+//            }
+//        });
 
 //        queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
 //            binding.queuePeopleCount.setText(Util.formatCount(list.size()));
@@ -90,6 +90,8 @@ public class QueueFragment extends Fragment {
 //            Log.i("TAG", users.toString());
 //            adapter.notifyDataSetChanged();
 //        });
+
+        queueVM.subscribe();
 
         binding.queueSwipeLayout.setOnRefreshListener(() -> {
             queueVM.updateQueue();
@@ -101,5 +103,9 @@ public class QueueFragment extends Fragment {
 //        queue.getValue().getQueuedPeople()
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        queueVM.cancelSubscribe();
+    }
 }
