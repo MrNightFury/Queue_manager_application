@@ -25,12 +25,13 @@ import ru.mrnightfury.queuemanager.Util;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueFragment extends Fragment {
-    FragmentQueueBinding binding;
-    QueuesViewModel queuesVM;
-    LiveData<Queue> queue;
-    QueuePeopleListAdapter adapter;
+    private static String TAG = "QF";
+    private FragmentQueueBinding binding;
+    private QueuesViewModel queuesVM;
+    private LiveData<Queue> queue;
+    private QueuePeopleListAdapter adapter;
 
-    ArrayList<Queue.User> users;
+    private ArrayList<Queue.User> users;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,30 +54,26 @@ public class QueueFragment extends Fragment {
         adapter = new QueuePeopleListAdapter(getContext(), R.layout.people_in_queue_item_layout, users);
         binding.queuedPeopleList.setAdapter(adapter);
 
-//        getActivity().getActionBar().setTitle(queue.getValue().getName());
-//        binding.setQueue(queue);
-//        getActivity().getActionBar().getCustomView().findViewById()
-
         queue.observe(getViewLifecycleOwner(), q -> {
-//            getActivity().getActionBar().setTitle(queue.getValue().getName());
+            Log.i(TAG, "Updating...");
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(q.getName());
-//            ((AppCompatActivity) getActivity()).getSupportActionBar().
             binding.queueDescription.setText(q.getDescription());
             if (binding.queueSwipeLayout.isRefreshing()) {
                 binding.queueSwipeLayout.setRefreshing(false);
             }
+            queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
+                binding.queuePeopleCount.setText(Util.formatCount(list.size()));
+                users.clear();
+                users.addAll(list);
+                Log.i("TAG", users.toString());
+                adapter.notifyDataSetChanged();
+            });
         });
 
-        queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
-            binding.queuePeopleCount.setText(Util.formatCount(list.size()));
-            users.clear();
-            users.addAll(list);
-            Log.i("TAG", users.toString());
-            adapter.notifyDataSetChanged();
-        });
+
 
         binding.queueSwipeLayout.setOnRefreshListener(() -> {
-
+            queuesVM.updateQueue();
         });
 //        queue.getValue().getQueuedPeople()
     }

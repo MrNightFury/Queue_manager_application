@@ -26,4 +26,7 @@ public interface QueueManagerAPI {
 
     @GET("/queues")
     public Call<QueueResponse[]> getQueues();
+
+    @GET("/queue/{id}")
+    public Call<QueueResponse> getQueue(@Path("id") String queueId);
 }

@@ -86,7 +86,7 @@ public class Queue {
         return config;
     }
 
-    public LiveData<ArrayList<User>> getQueuedPeople() {
+    public MutableLiveData<ArrayList<User>> getQueuedPeople() {
         return queuedPeople;
     }
 

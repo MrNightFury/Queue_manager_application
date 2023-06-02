@@ -14,6 +14,7 @@ public class NetworkService {
     private Retrofit mRetrofit = null;
 //    private static final String BASE_URL = "http://ipservera:port/";
 
+
     public static NetworkService getInstance() {
         if (mInstance == null) {
             mInstance = new NetworkService();

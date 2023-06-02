@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.FragmentConnectionCheckBinding;
 import ru.mrnightfury.queuemanager.databinding.FragmentStartBinding;
+import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
@@ -46,6 +47,11 @@ public class StartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         accountVM = new ViewModelProvider(this).get(AccountViewModel.class);
         navController = Navigation.findNavController(view);
+
+        binding.button2.setOnClickListener(v -> {
+//            NetworkWorker worker = NetworkWorker.getInstance();
+//            worker.subscribe();
+        });
 
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override

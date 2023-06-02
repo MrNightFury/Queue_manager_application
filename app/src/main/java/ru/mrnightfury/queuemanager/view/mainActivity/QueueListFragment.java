@@ -81,6 +81,7 @@ public class QueueListFragment extends Fragment {
             queuesVM.update();
         });
 
+
         queues.observe(getViewLifecycleOwner(), (newQueues -> {
             Log.i(TAG, "Refreshing list...");
             queuesList.clear();

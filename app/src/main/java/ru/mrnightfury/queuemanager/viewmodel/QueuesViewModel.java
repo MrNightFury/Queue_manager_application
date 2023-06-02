@@ -35,4 +35,8 @@ public class QueuesViewModel extends ViewModel {
     public void update() {
         repository.loadQueues();
     }
+
+    public void updateQueue() {
+        repository.updateChosenQueue();
+    }
 }

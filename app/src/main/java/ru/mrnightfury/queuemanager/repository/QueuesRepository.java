@@ -63,6 +63,7 @@ public class QueuesRepository {
             if (Objects.equals(q.getId(), id)) {
                 chosenQueue.setValue(new Queue(q));
                 loadUsernames();
+                updateChosenQueue();
                 return;
             }
         }
@@ -71,6 +72,25 @@ public class QueuesRepository {
         } else {
             Log.i(TAG, "Queue not found");
         }
+    }
+
+    public void updateChosenQueue() {
+        worker.loadQueue(chosenQueue.getValue().getId(),
+                q -> {
+                    Log.i(TAG, "Chosen queue updated");
+                    chosenQueue.setValue(new Queue(q));
+                },
+                (call, t) -> {}
+        );
+    }
+
+    public void updateChosenQueuePeopleList() {
+        worker.loadQueue(chosenQueue.getValue().getId(),
+                q -> {
+                    Queue newQ = new Queue(q);
+                    chosenQueue.getValue().getQueuedPeople().setValue(newQ.getQueuedPeople().getValue());
+                },
+                (call, t) -> {});
     }
 
     public void loadUsernames() {

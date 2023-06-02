@@ -3,6 +3,12 @@ package ru.mrnightfury.queuemanager.repository.networkAPI;
 
 import android.util.Log;
 
+import androidx.annotation.WorkerThread;
+
+import com.here.oksse.OkSse;
+import com.here.oksse.ServerSentEvent;
+
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -19,8 +25,9 @@ public class NetworkWorker {
     private static String[] URLs = {
             "http://10.0.2.2:8000/", // Для эмулятора
             "http://192.168.1.128:8000/",
-            "http://192.168.137.216:8000"
+            "http://192.168.137.216:8000/"
     };
+
 
     public static NetworkWorker getInstance() {
         if (instance == null) {
@@ -29,9 +36,11 @@ public class NetworkWorker {
         return instance;
     }
 
+    private String connectedURL;
     private QueueManagerAPI API;
+    private OkSse oksse;
     private NetworkWorker() {
-
+        oksse = new OkSse();
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
@@ -40,6 +49,7 @@ public class NetworkWorker {
             public void onResponse(Call<Object> call, Response<Object> response) {
 //                Log.i("dasdSA", "UYGGHYUYGYU");
                 API = NetworkService.getInstance().getJSONApi();
+                connectedURL = call.request().url().toString();
                 onSuccess.run();
             }
 
@@ -106,7 +116,7 @@ public class NetworkWorker {
         API.getQueues().enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<QueueResponse[]> call, Response<QueueResponse[]> response) {
-                Log.i(TAG, "Queue get response");
+                Log.i(TAG, "Queues get response");
                 onSuccess.onResult(response.body());
             }
 
@@ -118,10 +128,74 @@ public class NetworkWorker {
         });
     }
 
+    public void loadQueue(String queueId, OnSuccess<QueueResponse> onSuccess, OnFailure<QueueResponse> onFailure) {
+        Log.i(TAG, "Queue ret request");
+        API.getQueue(queueId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
+                Log.i(TAG, "Queue get response");
+                onSuccess.onResult(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<QueueResponse> call, Throwable t) {
+                Log.i(TAG, "Failed to get Queue");
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void watchQueue(String queueId, OnMessage listener){
+        Request request = new Request.Builder().url(connectedURL + "sse").build();
+        ServerSentEvent sse = oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
+            @Override
+            public void onOpen(ServerSentEvent sse, okhttp3.Response response) {
+
+            }
+
+            @Override
+            public void onMessage(ServerSentEvent sse, String id, String event, String message) {
+                Log.i("SSE", message);
+                listener.run(sse, id, event, message);
+            }
+
+            @WorkerThread
+            @Override
+            public void onComment(ServerSentEvent sse, String comment) {
+                // When a comment is received
+            }
+
+            @WorkerThread
+            @Override
+            public boolean onRetryTime(ServerSentEvent sse, long milliseconds) {
+                return true; // True to use the new retry time received by SSE
+            }
+
+            @Override
+            public boolean onRetryError(ServerSentEvent sse, Throwable throwable, okhttp3.Response response) {
+                return false;
+            }
+
+            @WorkerThread
+            @Override
+            public void onClosed(ServerSentEvent sse) {
+                // Channel closed
+            }
+
+            @Override
+            public Request onPreRetry(ServerSentEvent sse, Request originalRequest) {
+                return null;
+            }
+        });
+    }
+
     public interface OnSuccess<E> {
         void onResult (E result);
     }
     public interface OnFailure<E> {
         void onFailure(Call<E> call, Throwable t);
+    }
+    interface OnMessage {
+        public void run(ServerSentEvent sse, String id, String event, String message);
     }
 }
