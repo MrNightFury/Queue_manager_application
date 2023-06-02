@@ -1,6 +1,7 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,8 @@ public class QueuePeopleListAdapter extends ArrayAdapter<Queue.User> {
         View view = binding.getRoot();
 
         Queue.User user = list.get(position);
-        binding.peopleUsername.setText(user.getLogin());
+//        Log.i("QPLA", user.getUsername() == null ? "null" : user.getUsername());
+        binding.peopleUsername.setText(user.getUsername() == null ? user.getLogin() : user.getUsername());
         binding.peopleIcon.setImageResource(R.drawable.people_type_vk_icon);
 //        TextView title = view.findViewById(R.id.title);
 //        TextView description = view.findViewById(R.id.description);

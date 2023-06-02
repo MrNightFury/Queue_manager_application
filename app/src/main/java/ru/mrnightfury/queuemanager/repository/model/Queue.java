@@ -12,16 +12,15 @@ public class Queue {
     private String name;
     private String description;
     private QueueResponse.Config config;
-    private MutableLiveData<ArrayList<Queue.User>> queuedPeople = new MutableLiveData<>();
+    private ArrayList<Queue.User> queuedPeople = new ArrayList<>();
 
     public Queue(QueueResponse q) {
         this.id = q.getId();
         this.config = q.getConfig();
         this.name = q.getName();
         this.description = q.getDescription();
-        this.queuedPeople.setValue(new ArrayList<>());
         for (QueueResponse.UserState u : q.getQueuedPeople()) {
-            this.queuedPeople.getValue().add(new User(u));
+            this.queuedPeople.add(new User(u));
         }
     }
 
@@ -86,7 +85,7 @@ public class Queue {
         return config;
     }
 
-    public MutableLiveData<ArrayList<User>> getQueuedPeople() {
+    public ArrayList<User> getQueuedPeople() {
         return queuedPeople;
     }
 
@@ -106,11 +105,7 @@ public class Queue {
         this.config = config;
     }
 
-    public void notifyListUpdate() {
-        this.queuedPeople.setValue(this.queuedPeople.getValue());
+    public void setQueuedPeople(ArrayList<User> queuedPeople) {
+        this.queuedPeople = queuedPeople;
     }
-
-//    public void setQueuedPeople(ArrayList<User> queuedPeople) {
-//        this.queuedPeople = queuedPeople;
-//    }
 }

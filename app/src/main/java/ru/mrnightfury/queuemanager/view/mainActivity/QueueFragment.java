@@ -22,16 +22,20 @@ import ru.mrnightfury.queuemanager.databinding.FragmentQueueBinding;
 import ru.mrnightfury.queuemanager.repository.model.Queue;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.Util;
+import ru.mrnightfury.queuemanager.viewmodel.QueueViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueFragment extends Fragment {
     private static String TAG = "QF";
     private FragmentQueueBinding binding;
-    private QueuesViewModel queuesVM;
-    private LiveData<Queue> queue;
+//    @Deprecated
+//    private QueuesViewModel queuesVM;
+    private QueueViewModel queueVM;
+//    private LiveData<Queue> queue;
     private QueuePeopleListAdapter adapter;
 
-    private ArrayList<Queue.User> users;
+//    @Deprecated
+//    private ArrayList<Queue.User> users;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,32 +52,51 @@ public class QueueFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        queuesVM = new ViewModelProvider(this).get(QueuesViewModel.class);
-        queue = queuesVM.getChosenQueue();
-        users = new ArrayList<>();
-        adapter = new QueuePeopleListAdapter(getContext(), R.layout.people_in_queue_item_layout, users);
+        queueVM = new ViewModelProvider(this).get(QueueViewModel.class);
+//        queue = queueVM.getChosenQueue();
+//        queuesVM = new ViewModelProvider(this).get(QueuesViewModel.class);
+//        queue = queuesVM.getChosenQueue();
+
+//        users = new ArrayList<>();
+        adapter = new QueuePeopleListAdapter(getContext(), R.layout.people_in_queue_item_layout,
+                queueVM.getUsers().getValue());
         binding.queuedPeopleList.setAdapter(adapter);
 
-        queue.observe(getViewLifecycleOwner(), q -> {
-            Log.i(TAG, "Updating...");
+        queueVM.getChosenQueue().observe(getViewLifecycleOwner(), q -> {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(q.getName());
             binding.queueDescription.setText(q.getDescription());
+            queueVM.updatePeopleList();
             if (binding.queueSwipeLayout.isRefreshing()) {
                 binding.queueSwipeLayout.setRefreshing(false);
             }
-            queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
-                binding.queuePeopleCount.setText(Util.formatCount(list.size()));
-                users.clear();
-                users.addAll(list);
-                Log.i("TAG", users.toString());
-                adapter.notifyDataSetChanged();
-            });
         });
 
+        queueVM.getUsers().observe(getViewLifecycleOwner(), newList -> {
+            binding.queuePeopleCount.setText(Util.formatCount(newList.size()));
+            adapter.notifyDataSetChanged();
+        });
 
+        binding.queueStar.setOnClickListener(v -> {
+            for (Queue.User u : queueVM.c().getQueuedPeople()) {
+                Log.i("ASD", u.getUsername() == null ? "null" : u.getUsername());
+            }
+        });
+
+//        queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
+//            binding.queuePeopleCount.setText(Util.formatCount(list.size()));
+//
+//            users.clear();
+//            users.addAll(list);
+//            Log.i("TAG", users.toString());
+//            adapter.notifyDataSetChanged();
+//        });
 
         binding.queueSwipeLayout.setOnRefreshListener(() -> {
-            queuesVM.updateQueue();
+            queueVM.updateQueue();
+        });
+
+        queueVM.getPeopleChangedTrigger().observe(getViewLifecycleOwner(), v -> {
+            queueVM.updatePeopleList();
         });
 //        queue.getValue().getQueuedPeople()
     }

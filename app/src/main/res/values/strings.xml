@@ -15,15 +15,15 @@
     <string name="connection_failed_text">Connection failed</string>
     <string name="login_label">Login</string>
     <string name="username_label">Username</string>
-    <string name="connection_check_label">Connection check</string>
+    <string name="connection_check_label" translatable="false">Connection check</string>
     <string name="loggingIn_wait_text">Logging in…</string>
     <string name="retryConnection_button_text">Retry</string>
     <string name="username_field_hint">Username</string>
-    <string name="login_contains_bad_chars">Login contains bad chars</string>
-    <string name="password_contains_bad_chars">Password contains bad chars</string>
-    <string name="username_contains_bad_chars">Username contains bad chars</string>
-    <string name="short_login_error">Login is too short</string>
-    <string name="short_password_error">Password is too short</string>
-    <string name="loading_placeholder_text">Loading...</string>
-    <string name="favourite_button_hint">Add to favourite</string>
+    <string name="login_contains_bad_chars" translatable="false">Login contains bad chars</string>
+    <string name="password_contains_bad_chars" translatable="false">Password contains bad chars</string>
+    <string name="username_contains_bad_chars" translatable="false">Username contains bad chars</string>
+    <string name="short_login_error" translatable="false">Login is too short</string>
+    <string name="short_password_error" translatable="false">Password is too short</string>
+    <string name="loading_placeholder_text" translatable="false">Loading...</string>
+    <string name="favourite_button_hint" translatable="false">Add to favourite</string>
 </resources>

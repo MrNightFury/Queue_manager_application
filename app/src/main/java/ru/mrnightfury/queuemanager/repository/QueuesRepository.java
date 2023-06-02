@@ -28,6 +28,7 @@ public class QueuesRepository {
     private NetworkWorker worker;
     private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
+    private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
     UsernameCache cache = new UsernameCache();
 
     private QueuesRepository() {
@@ -55,6 +56,10 @@ public class QueuesRepository {
         return this.chosenQueue;
     }
 
+    public Queue c() {
+        return chosenQueue.getValue();
+    }
+
     public void chooseQueue(String id) {
         chooseQueue(id, true);
     }
@@ -62,7 +67,6 @@ public class QueuesRepository {
         for (QueueResponse q : availableQueues.getValue()) {
             if (Objects.equals(q.getId(), id)) {
                 chosenQueue.setValue(new Queue(q));
-                loadUsernames();
                 updateChosenQueue();
                 return;
             }
@@ -79,24 +83,36 @@ public class QueuesRepository {
                 q -> {
                     Log.i(TAG, "Chosen queue updated");
                     chosenQueue.setValue(new Queue(q));
+                    loadUsernames();
                 },
                 (call, t) -> {}
         );
+    }
+
+    public LiveData<Boolean> getPeopleChangedTrigger() {
+        return peopleChangedTrigger;
     }
 
     public void updateChosenQueuePeopleList() {
         worker.loadQueue(chosenQueue.getValue().getId(),
                 q -> {
                     Queue newQ = new Queue(q);
-                    chosenQueue.getValue().getQueuedPeople().setValue(newQ.getQueuedPeople().getValue());
+                    chosenQueue.getValue().setQueuedPeople(newQ.getQueuedPeople());
+                    peopleChangedTrigger.setValue(true);
                 },
                 (call, t) -> {});
     }
 
     public void loadUsernames() {
-        for (Queue.User u : chosenQueue.getValue().getQueuedPeople().getValue()) {
+        Log.i(TAG, "Loading usernames");
+        for (
+//                int i = 0; i < chosenQueue.getValue().getQueuedPeople().size(); i++) {
+                Queue.User u : chosenQueue.getValue().getQueuedPeople()) {
+//            final int index = i;
+//            Queue.User u = chosenQueue.getValue().getQueuedPeople().get(i);
             String username = cache.getUsername(u.getLogin());
-            Log.i(TAG, u.getLogin() + "-" + username);
+//            Log.i(TAG, u.getLogin() + "-" + username);
+//            chosenQueue.getValue().getQueuedPeople().get(i).setUsername("ASD");
             if (username != null) {
                 u.setUsername(username);
             } else {
@@ -104,11 +120,17 @@ public class QueuesRepository {
                         result -> {
                             cache.setUsername(u.getLogin(), result.getUsername());
                             u.setUsername(result.getUsername());
-                            chosenQueue.getValue().notifyListUpdate();
+//                            Log.i(TAG, result.getUsername() + "-" + u.getUsername() + "-" + cache.getUsername(u.getLogin()) + "-" + chosenQueue.getValue().getQueuedPeople().get(index).getUsername());
+                            peopleChangedTrigger.setValue(true);
+//                            chosenQueue.getValue().notifyListUpdate();
+//                            for (Queue.User uu : chosenQueue.getValue().getQueuedPeople()) {
+//                                Log.i("ASD", uu.getUsername());
+//                            }
                         },
                         (call, t) -> {});
             }
         }
+
     }
 
 //    @Nullable
