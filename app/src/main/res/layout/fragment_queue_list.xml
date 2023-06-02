@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/queue_swipe_layout"
+        android:id="@+id/queues_swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.mainActivity.QueueListFragment">

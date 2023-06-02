@@ -2,7 +2,6 @@ package ru.mrnightfury.queuemanager.repository;
 
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -10,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import ru.mrnightfury.queuemanager.repository.model.Queue;
+import ru.mrnightfury.queuemanager.repository.model.UsernameCache;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 
 public class QueuesRepository {
     private static QueuesRepository instance;
@@ -25,8 +26,9 @@ public class QueuesRepository {
     }
 
     private NetworkWorker worker;
-    private MutableLiveData<ArrayList<Queue>> availableQueues = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
+    UsernameCache cache = new UsernameCache();
 
     private QueuesRepository() {
         worker = NetworkWorker.getInstance();
@@ -45,17 +47,22 @@ public class QueuesRepository {
         );
     }
 
-    public LiveData<ArrayList<Queue>> getAvailableQueues() {
+    public LiveData<ArrayList<QueueResponse>> getAvailableQueues() {
         return availableQueues;
+    }
+
+    public LiveData<Queue> getQueue() {
+        return this.chosenQueue;
     }
 
     public void chooseQueue(String id) {
         chooseQueue(id, true);
     }
     public void chooseQueue(String id, boolean first) {
-        for (Queue q : availableQueues.getValue()) {
+        for (QueueResponse q : availableQueues.getValue()) {
             if (Objects.equals(q.getId(), id)) {
-                chosenQueue.setValue(q);
+                chosenQueue.setValue(new Queue(q));
+                loadUsernames();
                 return;
             }
         }
@@ -63,6 +70,24 @@ public class QueuesRepository {
             loadQueues(() -> chooseQueue(id, false));
         } else {
             Log.i(TAG, "Queue not found");
+        }
+    }
+
+    public void loadUsernames() {
+        for (Queue.User u : chosenQueue.getValue().getQueuedPeople().getValue()) {
+            String username = cache.getUsername(u.getLogin());
+            Log.i(TAG, u.getLogin() + "-" + username);
+            if (username != null) {
+                u.setUsername(username);
+            } else {
+                worker.getUser(u.getLogin(),
+                        result -> {
+                            cache.setUsername(u.getLogin(), result.getUsername());
+                            u.setUsername(result.getUsername());
+                            chosenQueue.getValue().notifyListUpdate();
+                        },
+                        (call, t) -> {});
+            }
         }
     }
 

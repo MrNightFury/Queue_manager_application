@@ -14,7 +14,6 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,14 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.function.ObjIntConsumer;
 
 import ru.mrnightfury.queuemanager.R;
 //import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.databinding.FragmentQueueListBinding;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
-import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueListFragment extends Fragment {
@@ -39,8 +36,8 @@ public class QueueListFragment extends Fragment {
     AccountViewModel accountVM;
     QueuesViewModel queuesVM;
     FragmentQueueListBinding binding;
-    LiveData<ArrayList<Queue>> queues;
-    ArrayList<Queue> queuesList;
+    LiveData<ArrayList<QueueResponse>> queues;
+    ArrayList<QueueResponse> queuesList;
 //    SwipeRefreshLayout refreshLayout;
 
     @Override
@@ -71,16 +68,16 @@ public class QueueListFragment extends Fragment {
         QueueListAdapter adapter = new QueueListAdapter(queuesList);
 
         adapter.setOnItemClickListener((queue, position) -> {
-            Queue chosenQueue = queuesList.get(position);
+            QueueResponse chosenQueue = queuesList.get(position);
             Log.i(TAG, "Navigating to queue " + chosenQueue.getId());
-//            queuesVM.chooseQueue(chosenQueue.getId());
-//            navController.navigate(R.id.action_openQueueFromList);
+            queuesVM.chooseQueue(chosenQueue.getId());
+            navController.navigate(R.id.action_openQueueFromList);
         });
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
-        binding.queueSwipeLayout.setOnRefreshListener(() -> {
+        binding.queuesSwipeLayout.setOnRefreshListener(() -> {
             queuesVM.update();
         });
 
@@ -89,8 +86,8 @@ public class QueueListFragment extends Fragment {
             queuesList.clear();
             queuesList.addAll(newQueues);
             adapter.notifyDataSetChanged();
-            if (binding.queueSwipeLayout.isRefreshing()) {
-                binding.queueSwipeLayout.setRefreshing(false);
+            if (binding.queuesSwipeLayout.isRefreshing()) {
+                binding.queuesSwipeLayout.setRefreshing(false);
             }
         }));
 

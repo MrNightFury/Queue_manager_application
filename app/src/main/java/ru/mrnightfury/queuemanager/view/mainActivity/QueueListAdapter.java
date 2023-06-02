@@ -1,36 +1,29 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import ru.mrnightfury.queuemanager.R;
 //import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder> {
 //    QueueListItemLayoutBinding binding;
 //    private final LayoutInflater inflater;
-    private final ArrayList<Queue> queues;
+    private final ArrayList<QueueResponse> queues;
     OnClickListener listener = null;
 
     interface OnClickListener {
-        void onClick (Queue item, int position);
+        void onClick (QueueResponse item, int position);
     }
 
-    public QueueListAdapter(ArrayList<Queue> queues) {
+    public QueueListAdapter(ArrayList<QueueResponse> queues) {
         this.queues = queues;
     }
 
@@ -47,7 +40,7 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull QueueListAdapter.ViewHolder holder, int position) {
-        Queue queue = queues.get(position);
+        QueueResponse queue = queues.get(position);
         QueueListItemLayoutBinding binding = holder.getBinding();
         binding.queueName.setText(queue.getName());
         binding.queueDescription.setText(queue.getDescription());

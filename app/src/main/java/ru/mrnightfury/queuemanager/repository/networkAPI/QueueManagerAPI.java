@@ -6,7 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
@@ -25,5 +25,5 @@ public interface QueueManagerAPI {
     public Call<Result> createUser(@Body UserCreateRequest request);
 
     @GET("/queues")
-    public Call<Queue[]> getQueues();
+    public Call<QueueResponse[]> getQueues();
 }

@@ -15,72 +15,66 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
 
 @Deprecated
 public class AccountModel {
-    private static final String TAG = "AM";
-    private SharedPreferences sharedPrefs;
-    private String login;
-    private String password;
-    private String token;
+//    private static final String TAG = "AM";
+//    private SharedPreferences sharedPrefs;
+//    private String login;
+//    private String password;
+//    private String token;
+//
+//    private User user;
+//    private final QueueManagerAPI API;
 
-    private UserResponse user;
-    private final QueueManagerAPI API;
-
-    private static AccountModel instance = null;
-    private static final String loginKey = "login_key";
-    private static final String passwordKey = "password_key";
+//    private static AccountModel instance = null;
+//    private static final String loginKey = "login_key";
+//    private static final String passwordKey = "password_key";
 //    private static String tokenKey = "token_key";
 
-    public static AccountModel getInstance() {
-        if (instance == null) {
-            instance = new AccountModel();
-        }
-        return instance;
-    }
+//    public static AccountModel getInstance() {
+//        if (instance == null) {
+//            instance = new AccountModel();
+//        }
+//        return instance;
+//    }
 
-    public AccountModel() {
-        API = NetworkService.getInstance()
-                .getJSONApi();
-    }
+//    public AccountModel() {
+//        API = NetworkService.getInstance()
+//                .getJSONApi();
+//    }
 
-    @Deprecated
     public void load (Context context) {
-        sharedPrefs = context.getApplicationContext()
-                .getSharedPreferences("queue_manager.account", Context.MODE_PRIVATE);
-        login = sharedPrefs.getString(loginKey, null);
-        password = sharedPrefs.getString(passwordKey, null);
+//        sharedPrefs = context.getApplicationContext()
+//                .getSharedPreferences("queue_manager.account", Context.MODE_PRIVATE);
+//        login = sharedPrefs.getString(loginKey, null);
+//        password = sharedPrefs.getString(passwordKey, null);
     }
 
     public boolean hasAccount() {
-        Log.i("AM", (Boolean.valueOf(login != null && password != null)).toString() + login + password);
-//        return login != null && password != null;
+//        Log.i("AM", (Boolean.valueOf(login != null && password != null)).toString() + login + password);
+////        return login != null && password != null;
         return false;
     }
 
-    public void setAccount(String login, String password) {
-        this.login = login;
-        this.password = password;
-    }
-
     public void saveAccount() {
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(loginKey, login);
-        editor.putString(passwordKey, password);
-        editor.apply();
-        Log.i(TAG, "Account saved");
-        Log.i(TAG, sharedPrefs.getString(loginKey, "failed"));
+//        SharedPreferences.Editor editor = sharedPrefs.edit();
+//        editor.putString(loginKey, login);
+//        editor.putString(passwordKey, password);
+//        editor.apply();
+//        Log.i(TAG, "Account saved");
+//        Log.i(TAG, sharedPrefs.getString(loginKey, "failed"));
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
-        API.checkConnection()
-                .enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        onSuccess.run();
-                    }
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        onFailure.run();
-                    }
-                });
+//        API.checkConnection()
+//                .enqueue(new Callback<Object>() {
+//                    @Override
+//                    public void onResponse(Call<Object> call, Response<Object> response) {
+//                        onSuccess.run();
+//                    }
+//                    @Override
+//                    public void onFailure(Call<Object> call, Throwable t) {
+//                        onFailure.run();
+//                    }
+//                });
     };
 
     public interface onResultGetCallback<E> {
@@ -91,42 +85,42 @@ public class AccountModel {
     }
 
     public void login(onResultGetCallback<Result> onResultGetCallback, onFailureCallback<Result> onFailureCallback) {
-        API.getJWT(new LoginRequest(login, password)).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.body().isSuccess()) {
-                    token = response.body().getMessage();
-                    saveAccount();
-                }
-                onResultGetCallback.onResult(response.body());
-            }
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                onFailureCallback.onFailure(call, t);
-            }
-        });
+//        API.getJWT(new LoginRequest(login, password)).enqueue(new Callback<>() {
+//            @Override
+//            public void onResponse(Call<Result> call, Response<Result> response) {
+//                if (response.body().isSuccess()) {
+//                    token = response.body().getMessage();
+//                    saveAccount();
+//                }
+//                onResultGetCallback.onResult(response.body());
+//            }
+//            @Override
+//            public void onFailure(Call<Result> call, Throwable t) {
+//                onFailureCallback.onFailure(call, t);
+//            }
+//        });
     }
 
     public void getAccount(onResultGetCallback<UserResponse> onResultGetCallback, onFailureCallback<UserResponse> onFailureCallback) {
-        if (user == null) {
-            API.getUser(login).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    onResultGetCallback.onResult(response.body());
-                    user = response.body();
-                }
-                @Override
-                public void onFailure(Call<UserResponse> call, Throwable t) {
-                    onFailureCallback.onFailure(call, t);
-                }
-            });
-        } else {
-            onResultGetCallback.onResult(user);
-        }
+//        if (user == null) {
+//            API.getUser(login).enqueue(new Callback<>() {
+//                @Override
+//                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+//                    onResultGetCallback.onResult(response.body());
+//                    user = response.body();
+//                }
+//                @Override
+//                public void onFailure(Call<UserResponse> call, Throwable t) {
+//                    onFailureCallback.onFailure(call, t);
+//                }
+//            });
+//        } else {
+//            onResultGetCallback.onResult(user);
+//        }
     }
 
     public interface OnCheckCallback {
-        void onSuccess();
-        void onError();
+//        void onSuccess();
+//        void onError();
     }
 }

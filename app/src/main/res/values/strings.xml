@@ -25,4 +25,5 @@
     <string name="short_login_error">Login is too short</string>
     <string name="short_password_error">Password is too short</string>
     <string name="loading_placeholder_text">Loading...</string>
+    <string name="favourite_button_hint">Add to favourite</string>
 </resources>

@@ -1,13 +1,11 @@
 package ru.mrnightfury.queuemanager.viewmodel;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ru.mrnightfury.queuemanager.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.model.LoginStates;
 
 @Deprecated
@@ -17,7 +15,7 @@ public class LoginViewModelOld extends ViewModel {
     private MutableLiveData<String> token = new MutableLiveData<>();
     private MutableLiveData<LoginStates> state = new MutableLiveData<>();
     private String status;
-    private final AccountModel accountModel = AccountModel.getInstance();
+//    private final AccountModel accountModel = AccountModel.getInstance();
 
     public LiveData<String> getToken() {
         return token;

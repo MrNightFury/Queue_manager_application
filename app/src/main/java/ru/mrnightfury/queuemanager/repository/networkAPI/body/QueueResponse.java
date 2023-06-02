@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Queue {
+public class QueueResponse {
     @SerializedName("_id")
     @Expose
     private String id;
@@ -63,6 +63,14 @@ public class Queue {
         @Expose
         @Nullable
         private Boolean frozen;
+
+        @SerializedName("type")
+        @Expose
+        private String type;
+
+        public String getType() {
+            return type;
+        }
 
         public String getLogin() {
             return login;

@@ -6,10 +6,9 @@ import android.util.Log;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.mrnightfury.queuemanager.model.User;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
@@ -102,17 +101,17 @@ public class NetworkWorker {
         });
     }
 
-    public void loadQueues(OnSuccess<Queue[]> onSuccess, OnFailure<Queue[]> onFailure) {
+    public void loadQueues(OnSuccess<QueueResponse[]> onSuccess, OnFailure<QueueResponse[]> onFailure) {
         Log.i(TAG, "Queues get request");
         API.getQueues().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<Queue[]> call, Response<Queue[]> response) {
+            public void onResponse(Call<QueueResponse[]> call, Response<QueueResponse[]> response) {
                 Log.i(TAG, "Queue get response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
-            public void onFailure(Call<Queue[]> call, Throwable t) {
+            public void onFailure(Call<QueueResponse[]> call, Throwable t) {
                 Log.i(TAG, "Failed to get Queues");
                 onFailure.onFailure(call, t);
             }

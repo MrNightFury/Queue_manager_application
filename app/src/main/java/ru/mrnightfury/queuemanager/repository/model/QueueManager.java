@@ -1,7 +1,8 @@
 package ru.mrnightfury.queuemanager.repository.model;
 
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.Queue;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 
+@Deprecated
 public class QueueManager {
     private static QueueManager manager;
     public static QueueManager getInstance() {
@@ -11,8 +12,8 @@ public class QueueManager {
         return manager;
     }
 
-    private Queue[] queues;
-    public void setQueues(Queue[] queues) {
+    private QueueResponse[] queues;
+    public void setQueues(QueueResponse[] queues) {
         this.queues = queues;
     }
 }

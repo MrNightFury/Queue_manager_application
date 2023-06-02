@@ -17,62 +17,41 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.mrnightfury.queuemanager.R;
+import ru.mrnightfury.queuemanager.databinding.ActivityMainBinding;
 import ru.mrnightfury.queuemanager.repository.AccountRepository;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
 public class MainActivity extends AppCompatActivity {
     NavController navController;
     LoginViewModel loginVM;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
 //        DynamicColors.applyToActivityIfAvailable(this);
 
-//        TextView nameView = findViewById(R.id.nameField);
-//        TextView idView = findViewById(R.id.idField);
-//        findViewById(R.id.button).setOnClickListener(view1 -> {
-//            NetworkService.getInstance()
-//                    .getJSONApi()
-//                    .getUser("admin")
-//                    .enqueue(new Callback<User>() {
-//                        @Override
-//                        public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-//                            User user = response.body();
-//
-//                            nameView.setText(user.getName());
-//                            idView.setText(user.getId());
-//                        }
-//
-//                        @Override
-//                        public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-//                            nameView.setText("Something went wrong");
-//                            t.printStackTrace();
-//                        }
-//                    });
-//        });
         SharedPreferences sharedPref = getApplicationContext()
                 .getSharedPreferences("queue.main", Context.MODE_PRIVATE);
         View navHost = findViewById(R.id.fragmentContainerView);
         NavController navController = Navigation.findNavController(navHost);
-//        NavigationUI.setupWithNavController((BottomNavigationView) findViewById(R.id.menu), navController);
 
-
-        BottomNavigationView menu = findViewById(R.id.menu);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration
                 .Builder(R.id.startFragment, R.id.queueListFragment, R.id.menuFragment)
                 .build();
 
-        NavigationUI.setupWithNavController(menu, navController);
+        NavigationUI.setupWithNavController(binding.menu, navController);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.cardBackground)));
     }
 
     @Nullable
@@ -81,5 +60,18 @@ public class MainActivity extends AppCompatActivity {
         View view = super.onCreateView(parent, name, context, attrs);
         loginVM = new ViewModelProvider(this).get(LoginViewModel.class);
         return view;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            View navHost = findViewById(R.id.fragmentContainerView);
+            navController = Navigation.findNavController(navHost);
+            navController.navigateUp();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
