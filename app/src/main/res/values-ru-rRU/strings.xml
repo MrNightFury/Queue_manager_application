@@ -13,7 +13,20 @@
     <string name="connection_failed_text">Не удалось подключиться</string>
     <string name="login_label">Логин</string>
     <string name="username_label">Имя пользователя</string>
+    <string name="connection_check_label">Проверка подключения</string>
     <string name="loggingIn_wait_text">Вход...</string>
     <string name="retryConnection_button_text">Повторить попытку</string>
     <string name="username_field_hint">Имя пользователя</string>
+    <string name="short_login_error">Логин слишком короткий</string>
+    <string name="short_password_error">Пароль слишком короткий</string>
+    <string name="loading_placeholder_text">***</string>
+    <string name="favourite_button_hint">Добавить в избранное</string>
+    <string name="joinQueue_button_text">Войти</string>
+    <string name="leaveQueue_button_text">Выйти</string>
+    <string name="freezeInQueue_button_text">Заморозиться</string>
+    <string name="unfreezeInQueue_button_text">Разморозиться</string>
+    <string name="queue_creation_label">Создание очереди</string>
+    <string name="queue_name_input_label">Название</string>
+    <string name="text_description_input_label">Описание</string>
+    <string name="create_queue_button_text">Создать</string>
 </resources>

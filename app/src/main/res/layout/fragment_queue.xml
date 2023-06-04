@@ -12,6 +12,9 @@
         <variable
             name="isUserInQueue"
             type="LiveData&lt;Boolean>" />
+        <variable
+            name="isUserFrozen"
+            type="LiveData&lt;Boolean>" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -162,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        android:text="@string/freezeInQueue_button_text"
+                        android:text="@{ isUserFrozen ? R.string.unfreezeInQueue_button_text : R.string.freezeInQueue_button_text }"
                         android:visibility="@{ isUserInQueue ? View.VISIBLE : View.GONE }"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/joinOrLeave_button"

@@ -48,6 +48,7 @@ public class QueuePeopleListAdapter extends ArrayAdapter<Queue.User> {
                     }
                 }).apply(user.getType())
         );
+        binding.frozenIcon.setVisibility(user.getFrozen() ? View.VISIBLE : View.GONE);
 //        TextView title = view.findViewById(R.id.title);
 //        TextView description = view.findViewById(R.id.description);
 //        ImageView image = view.findViewById(R.id.imageView);

@@ -12,6 +12,7 @@
             android:id="@+id/people_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/people_type_not_registered_icon" />
@@ -26,5 +27,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/people_icon"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/frozen_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/people_username"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/frozen_people_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

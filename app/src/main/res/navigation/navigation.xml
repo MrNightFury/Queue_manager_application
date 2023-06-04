@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_openQueueFromList"
             app:destination="@id/queueFragment" />
+        <action
+            android:id="@+id/action_toCreateQueueFragment"
+            app:destination="@id/createQueueFragment" />
     </fragment>
     <action
         android:id="@+id/action_toQueueListFragment"
@@ -37,4 +40,13 @@
         android:id="@+id/queueFragment"
         android:name="ru.mrnightfury.queuemanager.view.mainActivity.QueueFragment"
         android:label="QueueFragment" />
+    <fragment
+        android:id="@+id/createQueueFragment"
+        android:name="ru.mrnightfury.queuemanager.view.mainActivity.CreateQueueFragment"
+        android:label="CreateQueueFragment" >
+        <action
+            android:id="@+id/action_queueCreated"
+            app:destination="@id/queueFragment"
+            app:popUpTo="@id/queueListFragment" />
+    </fragment>
 </navigation>

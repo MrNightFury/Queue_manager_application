@@ -19,6 +19,7 @@ public class AccountModel {
     private String login = null;
     private String password = null;
     private String username = null;
+    @Deprecated
     private String token = null;
 
     private boolean loaded = false;
@@ -35,6 +36,7 @@ public class AccountModel {
         return password;
     }
 
+    @Deprecated
     public String getToken() {
         return token;
     }
@@ -44,6 +46,7 @@ public class AccountModel {
         this.password = password;
     }
 
+    @Deprecated
     public void setToken(String token) {
         this.token = token;
     }

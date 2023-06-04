@@ -2,10 +2,17 @@ package ru.mrnightfury.queuemanager.repository.networkAPI;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueCreateRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueDeleteRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueuePutBody;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
@@ -29,4 +36,14 @@ public interface QueueManagerAPI {
 
     @GET("/queue/{id}")
     public Call<QueueResponse> getQueue(@Path("id") String queueId);
+
+    @PUT("/queue/{id}")
+    public Call<Result> putQueue(@Path("id") String queueId, @Header("authorization") String token,
+                                 @Body QueuePutBody body);
+
+    @POST("/queues")
+    public Call<Result> createQueue(@Header("authorization") String token, @Body QueueCreateRequest body);
+
+    @HTTP(method="DELETE", path="/queues", hasBody=true)
+    public Call<Result> deleteQueue(@Header("authorization") String token, @Body QueueDeleteRequest request);
 }

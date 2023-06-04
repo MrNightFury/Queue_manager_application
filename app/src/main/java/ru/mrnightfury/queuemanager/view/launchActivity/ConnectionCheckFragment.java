@@ -54,9 +54,9 @@ public class ConnectionCheckFragment extends Fragment {
             accountVM.connect();
         });
 
-        binding.checkLoginStateButton.setOnClickListener(view1 -> {
-            Log.i(TAG, state.getValue().name());
-        });
+//        binding.checkLoginStateButton.setOnClickListener(view1 -> {
+//            Log.i(TAG, state.getValue().name());
+//        });
 
         state.observe(getViewLifecycleOwner(), newState -> {
             final String TAG = "LSObserver";

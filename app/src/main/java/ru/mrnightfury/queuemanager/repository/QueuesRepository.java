@@ -14,6 +14,7 @@ import java.util.Objects;
 import ru.mrnightfury.queuemanager.repository.model.Queue;
 import ru.mrnightfury.queuemanager.repository.model.UsernameCache;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueCreateRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 
 public class QueuesRepository {
@@ -31,6 +32,7 @@ public class QueuesRepository {
     private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
+    private MutableLiveData<String> queueEditionState = new MutableLiveData<>("None");
     private UsernameCache cache = new UsernameCache();
     ServerSentEvent queueSSE;
 
@@ -54,11 +56,14 @@ public class QueuesRepository {
     public LiveData<ArrayList<QueueResponse>> getAvailableQueues() {
         return availableQueues;
     }
-
     public LiveData<Queue> getQueue() {
         return this.chosenQueue;
     }
+    public LiveData<String> getQueueEditionState() {
+        return queueEditionState;
+    }
 
+    @Deprecated
     public Queue c() {
         return chosenQueue.getValue();
     }
@@ -139,13 +144,60 @@ public class QueuesRepository {
 
     public void subscribe() {
         queueSSE = worker.watchQueue(chosenQueue.getValue().getId(), (sse, id, event, message) -> {
-            updateChosenQueuePeopleList();
-//            Log.i(TAG, "Queue updated");
+            if (!Objects.equals(message, "{\"op\":\"delete\"}")) {
+                updateChosenQueuePeopleList();
+            } else {
+                chosenQueue.postValue(null);
+            }
         });
     }
 
     public void cancelSubscribe() {
         queueSSE.close();
+    }
+
+    public void queuePut(String command) {
+        worker.putQueue(chosenQueue.getValue().getId(), command,
+                result -> {},
+                (call, t) -> {}
+        );
+    }
+
+    public void createQueue(QueueCreateRequest queue) {
+        worker.createQueue(queue,
+                result -> {
+                    if (result.isSuccess()) {
+                        Log.i(TAG, "Successful created queue");
+                        loadQueues(() -> {
+                            chooseQueue(result.getMessage());
+                            queueEditionState.setValue("Success");
+                        });
+                    } else {
+                        Log.i(TAG, result.getMessage());
+                        queueEditionState.setValue(result.getMessage());
+                    }
+                },
+                (call, t) -> {
+                    Log.i(TAG, "ASDASD");
+                    queueEditionState.setValue("Request error");
+                });
+    }
+
+    public void deleteQueue(String id) {
+        worker.deleteQueue(id,
+                result -> {
+                    if (result.isSuccess()) {
+                        chosenQueue.setValue(null);
+                        loadQueues();
+                        queueEditionState.setValue("Deleted");
+                    } else {
+                        Log.i(TAG, result.getMessage() == null ? "null": result.getMessage());
+                        queueEditionState.setValue("Success");
+                    }
+                },
+                (call, t) -> {
+                    queueEditionState.setValue("Request error");
+                });
     }
 
 //    @Nullable

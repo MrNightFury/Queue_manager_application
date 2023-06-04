@@ -4,6 +4,7 @@ package ru.mrnightfury.queuemanager.repository.networkAPI;
 import android.util.Log;
 
 import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
 
 import com.here.oksse.OkSse;
 import com.here.oksse.ServerSentEvent;
@@ -12,8 +13,13 @@ import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
+import ru.mrnightfury.queuemanager.repository.AccountRepository;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.LoginRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueCreateRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueDeleteRequest;
+import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueuePutBody;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.Result;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
@@ -25,7 +31,8 @@ public class NetworkWorker {
     private static String[] URLs = {
             "http://10.0.2.2:8000/", // Для эмулятора
             "http://192.168.1.128:8000/",
-            "http://192.168.137.216:8000/"
+            "http://192.168.137.216:8000/",
+            "http://192.168.149.245:8000"
     };
 
 
@@ -39,8 +46,14 @@ public class NetworkWorker {
     private String connectedURL;
     private QueueManagerAPI API;
     private OkSse oksse;
+    private String token;
+    private LiveData<AccountModel> account = AccountModel.getInstance();
     private NetworkWorker() {
         oksse = new OkSse();
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
@@ -66,12 +79,16 @@ public class NetworkWorker {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Log.i(TAG, "JWT get response");
+                if (response.body().isSuccess()) {
+                    setToken(response.body().getMessage());
+                }
                 onSuccess.onResult(response.body());
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Log.i(TAG, "Failed to get JWT");
+                AccountRepository.getInstance().incorrectAccount();
                 onFailure.onFailure(call, t);
             }
         });
@@ -122,7 +139,7 @@ public class NetworkWorker {
 
             @Override
             public void onFailure(Call<QueueResponse[]> call, Throwable t) {
-                Log.i(TAG, "Failed to get Queues");
+                Log.i(TAG, "Failed to get Queues: " + t.getMessage());
                 onFailure.onFailure(call, t);
             }
         });
@@ -140,6 +157,94 @@ public class NetworkWorker {
             @Override
             public void onFailure(Call<QueueResponse> call, Throwable t) {
                 Log.i(TAG, "Failed to get Queue");
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void putQueue(String queueId, String command,
+                         OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
+        Log.i(TAG, "Queue put: " + command);
+        API.putQueue(queueId, this.token, new QueuePutBody(command)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.code() != 401) {
+                    onSuccess.onResult(response.body());
+                } else {
+                    logIn(account.getValue(),
+                            result -> {
+                                if (result.isSuccess()) {
+                                    putQueue(queueId, command, onSuccess, onFailure);
+                                }
+                            },
+                            (c, t) -> {
+                                onFailure.onFailure(call, t);
+                            }
+                    );
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+
+    public void createQueue (QueueCreateRequest queue, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
+        Log.i(TAG, "Queue create: " + queue.toString());
+        API.createQueue(this.token, queue).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.code() != 401) {
+                    onSuccess.onResult(response.body());
+                } else {
+                    Log.i(TAG, "Deprecated JWT...");
+                    logIn(account.getValue(),
+                            result -> {
+                                if (result.isSuccess()) {
+                                    createQueue(queue, onSuccess, onFailure);
+                                }
+                            },
+                            (c, t) -> {
+                                onFailure.onFailure(call, t);
+                            }
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
+    public void deleteQueue (String id, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
+        Log.i(TAG, "Queue create: ");
+        API.deleteQueue(this.token, new QueueDeleteRequest(id)).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.code() != 401) {
+                    onSuccess.onResult(response.body());
+                } else {
+                    logIn(account.getValue(),
+                            result -> {
+                                if (result.isSuccess()) {
+                                    deleteQueue(id, onSuccess, onFailure);
+                                }
+                            },
+                            (c, t) -> {
+                                onFailure.onFailure(call, t);
+                            }
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
         });

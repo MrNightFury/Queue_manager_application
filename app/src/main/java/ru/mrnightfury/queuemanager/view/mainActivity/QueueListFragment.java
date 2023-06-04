@@ -81,6 +81,10 @@ public class QueueListFragment extends Fragment {
             queuesVM.update();
         });
 
+        binding.addQueueButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_toCreateQueueFragment);
+        });
+
 
         queues.observe(getViewLifecycleOwner(), (newQueues -> {
             Log.i(TAG, "Refreshing list...");

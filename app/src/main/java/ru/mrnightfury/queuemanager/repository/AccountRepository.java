@@ -48,7 +48,8 @@ public class AccountRepository {
             model.getValue().setAccount(login, password);
         }
         if (token != null) {
-            model.getValue().setToken(token);
+            worker.setToken(token);
+//            model.getValue().setToken(token);
         }
     }
 
@@ -133,5 +134,9 @@ public class AccountRepository {
 
     public void exit() {
         loginState.setValue(LoginStates.NONE);
+    }
+
+    public void incorrectAccount() {
+        this.loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
     }
 }

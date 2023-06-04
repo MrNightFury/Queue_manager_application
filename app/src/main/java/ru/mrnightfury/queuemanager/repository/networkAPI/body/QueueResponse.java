@@ -51,7 +51,17 @@ public class QueueResponse {
     public static class Config {
         @SerializedName("owner")
         @Expose
-        private String owner;
+        public Owner owner;
+
+        public static class Owner {
+            @SerializedName("login")
+            @Expose
+            public String login;
+
+            @SerializedName("type")
+            @Expose
+            public String type;
+        }
     }
 
     public static class UserState {
