@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -74,7 +76,12 @@ public class QueueFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.deleteQueue_menuItem) {
-                    queueVM.deleteQueue();
+//                    queueVM.deleteQueue();
+                    DeleteConfirmDialogFragment dialog = new DeleteConfirmDialogFragment();
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    dialog.show(transaction, "Dialog");
                 }
                 return false;
             }

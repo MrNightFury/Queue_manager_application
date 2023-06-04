@@ -33,6 +33,8 @@ public class QueuesRepository {
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
     private MutableLiveData<String> queueEditionState = new MutableLiveData<>("None");
+//    private MutableLiveData<ArrayList<String>> favouriteQueues = new MutableLiveData<>();
+
     private UsernameCache cache = new UsernameCache();
     ServerSentEvent queueSSE;
 

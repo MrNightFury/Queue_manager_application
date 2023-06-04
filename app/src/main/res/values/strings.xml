@@ -36,4 +36,7 @@
     <string name="text_description_input_label">Description</string>
     <string name="create_queue_button_text">Create</string>
     <string name="delete_queue_menu_item">Delete</string>
+    <string name="deletion_confirmation_dialog_text">Are you sure?</string>
+    <string name="deletion_configmation_dialog_yes">Yes</string>
+    <string name="deletion_confirmation_dialog_cancel">Cancel</string>
 </resources>
