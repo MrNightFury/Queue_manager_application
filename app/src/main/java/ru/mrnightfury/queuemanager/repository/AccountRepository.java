@@ -5,6 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.here.oksse.ServerSentEvent;
+
 import java.util.Objects;
 
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
@@ -33,6 +35,10 @@ public class AccountRepository {
 
     public String getStatus() {
         return status;
+    }
+
+    public boolean isLogged() {
+        return loginState.getValue() == LoginStates.LOGGED;
     }
 
     private AccountRepository() {
@@ -139,4 +145,18 @@ public class AccountRepository {
     public void incorrectAccount() {
         this.loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
     }
+
+
+//    public ServerSentEvent sse;
+//    public void watchUser() {
+//        sse = this.worker.watchUser(model.getValue().getLogin(),
+//                (sse, id, event, message) -> {
+//                    Log.i(TAG, event);
+//                }
+//        );
+//    }
+
+//    public void close() {
+//        sse.close();
+//    }
 }

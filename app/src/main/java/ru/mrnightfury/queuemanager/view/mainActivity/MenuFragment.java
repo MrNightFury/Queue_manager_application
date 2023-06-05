@@ -1,6 +1,6 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -16,14 +16,13 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import ru.mrnightfury.queuemanager.R;
+import ru.mrnightfury.queuemanager.background.NotificationsService;
 import ru.mrnightfury.queuemanager.databinding.FragmentMenuBinding;
-import ru.mrnightfury.queuemanager.repository.AccountRepository;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
-import ru.mrnightfury.queuemanager.repository.model.LoginStates;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
-import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.SettingsViewModel;
 
 public class MenuFragment extends Fragment {
@@ -54,13 +53,17 @@ public class MenuFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+        settingsVM = new ViewModelProvider(this).get(SettingsViewModel.class);
+        accountVM.loadUser();
+
+        settingsVM.getSettings().observe(getViewLifecycleOwner(), s -> {
+            binding.serviceSwitch.setChecked(s.isServiceEnabled());
+        });
+
         account.observe(getViewLifecycleOwner(), model -> {
             binding.accountLoginText.setText(model.getLogin());
             binding.accountUsernameText.setText(model.getUsername());
         });
-        accountVM.loadUser();
-//        TextView loginView = view.findViewById();
-
         getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -72,6 +75,15 @@ public class MenuFragment extends Fragment {
                     navController.navigateUp();
                 }
             }
+        });
+
+        binding.enterDevMenuButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_toDevMenu);
+        });
+
+        binding.serviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            settingsVM.getSettings().getValue().setServiceEnabled(isChecked);
+            settingsVM.notifySettingsChanged();
         });
     }
 }

@@ -4,14 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SettingsViewModel extends ViewModel {
-    private MutableLiveData<Boolean> data = new MutableLiveData<>();
+import ru.mrnightfury.queuemanager.repository.SettingsRepository;
+import ru.mrnightfury.queuemanager.repository.model.Settings;
 
-    public LiveData<Boolean> getData() {
-        return data;
+public class SettingsViewModel extends ViewModel {
+    private SettingsRepository repository;
+    private LiveData<Settings> settings;
+
+    public SettingsViewModel() {
+        repository = SettingsRepository.getInstance();
+        settings = repository.getSettings();
     }
 
-    public void check(Boolean check) {
-        this.data.setValue(check);
+    public LiveData<Settings> getSettings() {
+        return settings;
+    }
+
+    public void notifySettingsChanged() {
+        repository.notifySettingsChanged();
     }
 }

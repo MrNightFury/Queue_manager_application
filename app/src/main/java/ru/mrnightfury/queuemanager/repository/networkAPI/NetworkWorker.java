@@ -297,6 +297,108 @@ public class NetworkWorker {
 //        return sse;
     }
 
+    public ServerSentEvent watchUser(String login, ServerSentEvent.Listener listener) {
+        Request request = new Request.Builder()
+                .url(connectedURL + "user/" + login + "/subscribe")
+                .build();
+
+        return oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
+            @Override
+            public void onOpen(ServerSentEvent sse, okhttp3.Response response) {
+                Log.i("User SSE", "SSE channel opened");
+                listener.onOpen(sse, response);
+            }
+
+            @Override
+            public void onMessage(ServerSentEvent sse, String id, String event, String message) {
+                Log.i("User SSE", message);
+                listener.onMessage(sse, id, event, message);
+            }
+
+            @WorkerThread
+            @Override
+            public void onComment(ServerSentEvent sse, String comment) {
+                // When a comment is received
+                listener.onComment(sse, comment);
+            }
+
+            @WorkerThread
+            @Override
+            public boolean onRetryTime(ServerSentEvent sse, long milliseconds) {
+                return listener.onRetryTime(sse, milliseconds); // True to use the new retry time received by SSE
+            }
+
+            @Override
+            public boolean onRetryError(ServerSentEvent sse, Throwable throwable, okhttp3.Response response) {
+                return listener.onRetryError(sse, throwable, response);
+            }
+
+            @WorkerThread
+            @Override
+            public void onClosed(ServerSentEvent sse) {
+                Log.i("SSE", "User SSE channel closed: ");
+                listener.onClosed(sse);
+            }
+
+            @Override
+            public Request onPreRetry(ServerSentEvent sse, Request originalRequest) {
+                return listener.onPreRetry(sse, originalRequest);
+            }
+        });
+    }
+
+    @Deprecated
+    public ServerSentEvent watchTest(ServerSentEvent.Listener listener) {
+        Request request = new Request.Builder()
+                .url(connectedURL + "sse")
+                .build();
+
+        return oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
+            @Override
+            public void onOpen(ServerSentEvent sse, okhttp3.Response response) {
+                Log.i("User SSE", "SSE channel opened");
+                listener.onOpen(sse, response);
+            }
+
+            @Override
+            public void onMessage(ServerSentEvent sse, String id, String event, String message) {
+                Log.i("Test SSE", message);
+                listener.onMessage(sse, id, event, message);
+//                listener.run(sse, id, event, message);
+            }
+
+            @WorkerThread
+            @Override
+            public void onComment(ServerSentEvent sse, String comment) {
+                listener.onComment(sse, comment);
+                // When a comment is received
+            }
+
+            @WorkerThread
+            @Override
+            public boolean onRetryTime(ServerSentEvent sse, long milliseconds) {
+                return listener.onRetryTime(sse, milliseconds); // True to use the new retry time received by SSE
+            }
+
+            @Override
+            public boolean onRetryError(ServerSentEvent sse, Throwable throwable, okhttp3.Response response) {
+                return listener.onRetryError(sse, throwable, response);
+            }
+
+            @WorkerThread
+            @Override
+            public void onClosed(ServerSentEvent sse) {
+                Log.i("SSE", "Test SSE channel closed");
+                listener.onClosed(sse);
+            }
+
+            @Override
+            public Request onPreRetry(ServerSentEvent sse, Request originalRequest) {
+                return listener.onPreRetry(sse, originalRequest);
+            }
+        });
+    }
+
     public interface OnSuccess<E> {
         void onResult (E result);
     }

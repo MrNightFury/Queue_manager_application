@@ -3,6 +3,8 @@ package ru.mrnightfury.queuemanager.repository;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import ru.mrnightfury.queuemanager.repository.model.Settings;
+
 public class SharedPrefsWorker {
     private static SharedPrefsWorker instance;
     public static SharedPrefsWorker getInstance() {
@@ -53,5 +55,17 @@ public class SharedPrefsWorker {
     @Deprecated
     public SharedPreferences getSharedPrefs() {
         return sharedPrefs;
+    }
+
+    private static final String settingsKeyPrefix = "settings";
+    public Settings getSettings() {
+        return new Settings()
+                .setServiceEnabled(sharedPrefs.getBoolean(settingsKeyPrefix + "_serviceEnabled", false));
+    }
+
+    public void saveSettings(Settings settings) {
+        sharedPrefs.edit()
+                .putBoolean(settingsKeyPrefix + "_serviceEnabled", settings.isServiceEnabled())
+                .apply();
     }
 }
