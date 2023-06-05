@@ -32,6 +32,7 @@ public class NotificationsService extends Service {
     private static Boolean isServiceRunning = false;
     private String login;
     private ServerSentEvent sse;
+    private PendingIntent stopServiceIntent;
 
     public static Boolean isRunning() {
         return isServiceRunning;
@@ -45,6 +46,9 @@ public class NotificationsService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        stopServiceIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
+                new Intent(this, Receiver.class), PendingIntent.FLAG_IMMUTABLE);
+
         isServiceRunning = true;
         this.login = intent.getStringExtra("login");
         if (login == null) {
@@ -62,7 +66,8 @@ public class NotificationsService extends Service {
 //                        .setContentText("TEXT")
                         .setSmallIcon(R.drawable.people_type_site_icon)
                         .setContentIntent(pendingIntent)
-                        .setTicker("TICKER")
+//                        .setTicker("TICKER")
+                        .setColor(getColor(R.color.white))
                         .build();
 
         Log.i(TAG, "STARTED");
@@ -98,9 +103,12 @@ public class NotificationsService extends Service {
                         getApplicationContext().getString(R.string.notificationChannel_name),
                         NotificationManager.IMPORTANCE_HIGH));
 
+
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), String.valueOf(1))
                         .setSmallIcon(R.drawable.home_icon)
                         .setContentTitle(text)
+                        .setColor(getColor(R.color.white))
+                        .addAction(R.drawable.people_type_site_icon, "Stop Service", stopServiceIntent)
 //                        .setContentText("text")
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
