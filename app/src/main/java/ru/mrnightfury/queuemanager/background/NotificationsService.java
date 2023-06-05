@@ -50,6 +50,9 @@ public class NotificationsService extends Service {
                 new Intent(this, Receiver.class), PendingIntent.FLAG_IMMUTABLE);
 
         isServiceRunning = true;
+        if (intent == null) {
+            stopSelf();
+        }
         this.login = intent.getStringExtra("login");
         if (login == null) {
             Log.e(TAG, "No login provided");

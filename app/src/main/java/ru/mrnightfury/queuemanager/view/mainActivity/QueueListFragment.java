@@ -65,7 +65,7 @@ public class QueueListFragment extends Fragment {
 
         RecyclerView recyclerView = binding.queueList;
 //        RecyclerView recyclerView = view.findViewById(R.id.queue_list);
-        QueueListAdapter adapter = new QueueListAdapter(queuesList);
+        QueueListAdapter adapter = new QueueListAdapter(queuesList, queuesVM);
 
         adapter.setOnItemClickListener((queue, position) -> {
             QueueResponse chosenQueue = queuesList.get(position);

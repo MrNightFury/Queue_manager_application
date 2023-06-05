@@ -39,4 +39,16 @@ public class QueuesViewModel extends ViewModel {
     public void updateQueue() {
         repository.updateChosenQueue();
     }
+
+    public void addToFavourite(String id) {
+        repository.addToFavourite(id);
+    }
+
+    public boolean isFavourite(String id) {
+        return repository.isFavourite(id);
+    }
+
+    public void deleteFromFavourite(String id) {
+        repository.deleteFromFavourites(id);
+    }
 }

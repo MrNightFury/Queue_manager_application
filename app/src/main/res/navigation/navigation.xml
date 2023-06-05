@@ -9,7 +9,11 @@
         android:id="@+id/startFragment"
         android:name="ru.mrnightfury.queuemanager.view.mainActivity.StartFragment"
         android:label="@string/main_fragment_label"
-        tools:layout="@layout/fragment_start" />
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_toFavouriteQueue"
+            app:destination="@id/queueFragment" />
+    </fragment>
     <action
         android:id="@+id/action_toHomeFragment"
         app:destination="@id/startFragment" />

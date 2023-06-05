@@ -250,6 +250,20 @@ public class NetworkWorker {
         });
     }
 
+    public void checkQueue(String id, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
+        API.checkQueue(id).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                onSuccess.onResult(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                onFailure.onFailure(call, t);
+            }
+        });
+    }
+
     public ServerSentEvent watchQueue(String queueId, OnMessage listener){
         Request request = new Request.Builder()
                 .url(connectedURL + "queue/" + queueId + "/subscribe")

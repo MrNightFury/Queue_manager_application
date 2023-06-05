@@ -1,6 +1,7 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,21 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 //import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
+import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
+import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder> {
 //    QueueListItemLayoutBinding binding;
 //    private final LayoutInflater inflater;
     private final ArrayList<QueueResponse> queues;
+    private final QueuesViewModel queuesVM;
     OnClickListener listener = null;
 
     interface OnClickListener {
         void onClick (QueueResponse item, int position);
     }
 
-    public QueueListAdapter(ArrayList<QueueResponse> queues) {
+    public QueueListAdapter(ArrayList<QueueResponse> queues, QueuesViewModel vm) {
         this.queues = queues;
+        this.queuesVM = vm;
     }
 
     @Override
@@ -45,6 +50,19 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         binding.queueName.setText(queue.getName());
         binding.queueDescription.setText(queue.getDescription());
         binding.queuePeopleCount.setText(Integer.toString(queue.getQueuedPeople().length));
+        holder.isFavourite = queuesVM.isFavourite(queue.getId());
+        holder.updateStar();
+
+        binding.queueStar.setOnClickListener(v -> {
+            if (!holder.isFavourite) {
+                holder.isFavourite = true;
+                queuesVM.addToFavourite(queue.getId());
+            } else {
+                holder.isFavourite = false;
+                queuesVM.deleteFromFavourite(queue.getId());
+            }
+            holder.updateStar();
+        });
 
         holder.itemView.setOnClickListener(view -> {
             if (listener != null) {
@@ -64,9 +82,14 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         QueueListItemLayoutBinding binding;
+        Boolean isFavourite;
         ViewHolder(QueueListItemLayoutBinding binding){
             super(binding.getRoot());
             this.binding = binding;
+        }
+
+        void updateStar() {
+            binding.queueStar.setImageResource(isFavourite ? R.drawable.star_icon_filled : R.drawable.star_icon);
         }
 
         QueueListItemLayoutBinding getBinding() {

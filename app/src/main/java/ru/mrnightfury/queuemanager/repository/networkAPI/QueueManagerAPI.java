@@ -37,6 +37,9 @@ public interface QueueManagerAPI {
     @GET("/queue/{id}")
     public Call<QueueResponse> getQueue(@Path("id") String queueId);
 
+    @GET("/queue/{id}/check")
+    public Call<Result> checkQueue(@Path("id") String queueId);
+
     @PUT("/queue/{id}")
     public Call<Result> putQueue(@Path("id") String queueId, @Header("authorization") String token,
                                  @Body QueuePutBody body);

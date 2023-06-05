@@ -47,4 +47,6 @@
     <string name="dev_devMenu_label">Dev menu</string>
     <string name="you_are_next_nitification">You are next in</string>
     <string name="notificationChannel_name">Notifications</string>
+    <string name="favourite_tab_title">Favourite</string>
+    <string name="dev_checkFavourite_button">Check favourite</string>
 </resources>

@@ -1,5 +1,6 @@
 package ru.mrnightfury.queuemanager.repository;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import ru.mrnightfury.queuemanager.repository.database.FavouriteDatabase;
+import ru.mrnightfury.queuemanager.repository.database.FavouriteEntity;
 import ru.mrnightfury.queuemanager.repository.model.Queue;
 import ru.mrnightfury.queuemanager.repository.model.UsernameCache;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
@@ -29,10 +32,14 @@ public class QueuesRepository {
     }
 
     private NetworkWorker worker;
+    private FavouriteDatabase db;
     private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
     private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
     private MutableLiveData<String> queueEditionState = new MutableLiveData<>("None");
+
+    private ArrayList<FavouriteEntity> favouriteQueuesIds = new ArrayList<>();
+    private MutableLiveData<ArrayList<QueueResponse>> favouriteQueues = new MutableLiveData<>(new ArrayList<>());
 //    private MutableLiveData<ArrayList<String>> favouriteQueues = new MutableLiveData<>();
 
     private UsernameCache cache = new UsernameCache();
@@ -116,9 +123,7 @@ public class QueuesRepository {
 
     public void loadUsernames() {
         Log.i(TAG, "Loading usernames");
-        for (
-//                int i = 0; i < chosenQueue.getValue().getQueuedPeople().size(); i++) {
-                Queue.User u : chosenQueue.getValue().getQueuedPeople()) {
+        for (Queue.User u : chosenQueue.getValue().getQueuedPeople()) {
 //            final int index = i;
 //            Queue.User u = chosenQueue.getValue().getQueuedPeople().get(i);
             String username = cache.getUsername(u.getLogin());
@@ -201,6 +206,102 @@ public class QueuesRepository {
                     queueEditionState.setValue("Request error");
                 });
     }
+
+    public void init(Context context) {
+        db = FavouriteDatabase.getDatabase(context);
+        new Thread(() -> {
+            favouriteQueuesIds = new ArrayList<>(Arrays.asList(db.favouriteDao().getFavourite()));
+            loadFavourites();
+        }).start();
+    }
+
+
+    private int counter;
+    private int count;
+    public void loadFavourites() {
+        Log.i("ASD", "CLEARING");
+        favouriteQueues.getValue().clear();
+        count = favouriteQueuesIds.size();
+        counter = 0;
+        for (FavouriteEntity e : favouriteQueuesIds) {
+            worker.checkQueue(e.getQueueId(),
+                    result -> {
+                        if (result.isSuccess()) {
+                            loadFavourite(e.getQueueId());
+                        } else if (Objects.equals(result.getMessage(), "Queue does not exist")) {
+                            new Thread(() -> {
+                                db.favouriteDao().removeFromFavourite(e);
+                                counter++;
+                            }).start();
+                        }
+                    },
+                    (call, t) -> {}
+            );
+        }
+    }
+
+    public void loadFavourite(String id) {
+        worker.loadQueue(id,
+                result -> {
+                    favouriteQueues.getValue().add(result);
+                    Log.i("NOW", String.valueOf(favouriteQueues.getValue().size()));
+                    counter++;
+                    if (counter >= count) {
+                        notifyFavouriteQueuesChanged();
+                    }
+                },
+                (call, t) -> {});
+    }
+
+    public void notifyFavouriteQueuesChanged() {
+        Log.i("NOTIFY", String.valueOf(favouriteQueues.getValue().size()));
+        favouriteQueues.postValue(favouriteQueues.getValue());
+        Log.i("NOTIFY", String.valueOf(favouriteQueues.getValue().size()));
+    }
+
+    public LiveData<ArrayList<QueueResponse>> getFavouriteQueues() {
+        return favouriteQueues;
+    }
+
+    public void addToFavourite(String id) {
+        favouriteQueuesIds.add(new FavouriteEntity(id));
+        new Thread(() -> {
+            db.favouriteDao().addToFavourite(new FavouriteEntity(id));
+            loadFavourites();
+        }).start();
+    }
+
+    public ArrayList<FavouriteEntity> getFavouriteQueuesIds() {
+        return favouriteQueuesIds;
+    }
+
+    public Boolean isFavourite(String id) {
+        for (FavouriteEntity e : favouriteQueuesIds) {
+            if (Objects.equals(e.getQueueId(), id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void deleteFromFavourites(String id) {
+        FavouriteEntity forDelete = null;
+        for (FavouriteEntity e : favouriteQueuesIds) {
+            if (Objects.equals(e.getQueueId(), id)) {
+                forDelete = e;
+                break;
+            }
+        }
+        if (forDelete != null) {
+            FavouriteEntity e = forDelete;
+            favouriteQueuesIds.remove(e);
+            new Thread(() -> {
+                db.favouriteDao().removeFromFavourite(e);
+                loadFavourites();
+            }).start();
+        }
+    }
+
 
 
 

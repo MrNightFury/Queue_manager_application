@@ -27,6 +27,7 @@ import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.background.ServiceLauncher;
 import ru.mrnightfury.queuemanager.databinding.ActivityMainBinding;
 import ru.mrnightfury.queuemanager.repository.AccountRepository;
+import ru.mrnightfury.queuemanager.repository.QueuesRepository;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        QueuesRepository.getInstance().init(getApplicationContext());
 
 //        DynamicColors.applyToActivityIfAvailable(this);
 
