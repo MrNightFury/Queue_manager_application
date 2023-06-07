@@ -52,6 +52,7 @@ public class NotificationsService extends Service {
         isServiceRunning = true;
         if (intent == null) {
             stopSelf();
+            return super.onStartCommand(null, flags, startId);
         }
         this.login = intent.getStringExtra("login");
         if (login == null) {
@@ -64,7 +65,7 @@ public class NotificationsService extends Service {
                         PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification =
-                new Notification.Builder(this, "1")
+                new Notification.Builder(this, getApplicationContext().getPackageName())
                         .setContentTitle("Service is started")
 //                        .setContentText("TEXT")
                         .setSmallIcon(R.drawable.people_type_site_icon)

@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.mrnightfury.queuemanager.R;
-//import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.databinding.FragmentQueueListBinding;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
@@ -32,13 +31,11 @@ import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 public class QueueListFragment extends Fragment {
     private static final String TAG = "QLF";
     NavController navController;
-//    LoginViewModel loginVM;
     AccountViewModel accountVM;
     QueuesViewModel queuesVM;
     FragmentQueueListBinding binding;
     LiveData<ArrayList<QueueResponse>> queues;
     ArrayList<QueueResponse> queuesList;
-//    SwipeRefreshLayout refreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,6 @@ public class QueueListFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentQueueListBinding.inflate(inflater);
         return binding.getRoot();
-//        return inflater.inflate(R.layout.fragment_queue_list, container, false);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -64,7 +60,6 @@ public class QueueListFragment extends Fragment {
         queuesList = queues.getValue();
 
         RecyclerView recyclerView = binding.queueList;
-//        RecyclerView recyclerView = view.findViewById(R.id.queue_list);
         QueueListAdapter adapter = new QueueListAdapter(queuesList, queuesVM);
 
         adapter.setOnItemClickListener((queue, position) -> {

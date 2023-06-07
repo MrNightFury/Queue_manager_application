@@ -1,8 +1,5 @@
 package ru.mrnightfury.queuemanager.repository.model;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import java.util.ArrayList;
 
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
@@ -14,16 +11,6 @@ public class Queue {
     private QueueResponse.Config config;
     private ArrayList<Queue.User> queuedPeople = new ArrayList<>();
 
-    public Queue(QueueResponse q) {
-        this.id = q.getId();
-        this.config = q.getConfig();
-        this.name = q.getName();
-        this.description = q.getDescription();
-        for (QueueResponse.UserState u : q.getQueuedPeople()) {
-            this.queuedPeople.add(new User(u));
-        }
-    }
-
     public static class User {
         private String login;
         private Boolean frozen;
@@ -31,6 +18,7 @@ public class Queue {
         private String username;
 
         public User(QueueResponse.UserState u) {
+            this.username = u.getUsername();
             this.login = u.getLogin();
             this.frozen = u.isFrozen();
             this.type = u.getType();
@@ -66,6 +54,16 @@ public class Queue {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+    }
+
+    public Queue(QueueResponse q) {
+        this.id = q.getId();
+        this.config = q.getConfig();
+        this.name = q.getName();
+        this.description = q.getDescription();
+        for (QueueResponse.UserState u : q.getQueuedPeople()) {
+            this.queuedPeople.add(new User(u));
         }
     }
 

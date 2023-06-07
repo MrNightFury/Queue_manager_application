@@ -58,6 +58,10 @@ public class ConnectionCheckFragment extends Fragment {
 //            Log.i(TAG, state.getValue().name());
 //        });
 
+        binding.checkLoginStateButton.setOnClickListener(v -> {
+            Toast.makeText(getContext(), state.getValue().toString(), Toast.LENGTH_SHORT).show();
+        });
+
         state.observe(getViewLifecycleOwner(), newState -> {
             final String TAG = "LSObserver";
             if (navController.getCurrentDestination().getId() != R.id.connectionCheckFragment) {
@@ -67,6 +71,7 @@ public class ConnectionCheckFragment extends Fragment {
             Log.i(TAG, newState.name());
             switch (newState) {
                 case NONE:
+                case EXIT:
                     accountVM.connect();
                     break;
                 case CONNECTION_CHECKING:
@@ -81,7 +86,6 @@ public class ConnectionCheckFragment extends Fragment {
                             .show();
                     break;
                 case LOGGED:
-//                    navController.navigate(R.id.action_connectionSucceeded);
                     startActivity(new Intent(getContext(), MainActivity.class));
                     break;
                 case NOT_FOUND:
@@ -91,16 +95,6 @@ public class ConnectionCheckFragment extends Fragment {
                 case LOGGING:
                     binding.connectionInfoText.setText(R.string.loggingIn_wait_text);
                     break;
-                case EXIT:
-                    accountVM.connect();
-//                    navController.navigateUp();
-//                    getActivity().finish();
-//                    getActivity().finishAffinity();
-                    break;
-
-//                case WAITING_FOR_USER:
-//                    navController.popBackStack();
-//                    break;
             }
         });
     }

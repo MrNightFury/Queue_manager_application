@@ -22,7 +22,7 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 
 public class QueuesRepository {
     private static QueuesRepository instance;
-    private static String TAG = "QR";
+    private static final String TAG = "QR";
 
     public static QueuesRepository getInstance() {
         if (instance == null) {
@@ -31,18 +31,18 @@ public class QueuesRepository {
         return instance;
     }
 
-    private NetworkWorker worker;
+    private final NetworkWorker worker;
     private FavouriteDatabase db;
-    private MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
-    private MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
-    private MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
-    private MutableLiveData<String> queueEditionState = new MutableLiveData<>("None");
+    private final MutableLiveData<ArrayList<QueueResponse>> availableQueues = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<Queue> chosenQueue = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> peopleChangedTrigger = new MutableLiveData<>();
+    private final MutableLiveData<String> queueEditionState = new MutableLiveData<>("None");
+    private final MutableLiveData<Boolean> chosenQueueIsLoaded = new MutableLiveData<>();
 
     private ArrayList<FavouriteEntity> favouriteQueuesIds = new ArrayList<>();
-    private MutableLiveData<ArrayList<QueueResponse>> favouriteQueues = new MutableLiveData<>(new ArrayList<>());
-//    private MutableLiveData<ArrayList<String>> favouriteQueues = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<QueueResponse>> favouriteQueues = new MutableLiveData<>(new ArrayList<>());
 
-    private UsernameCache cache = new UsernameCache();
+    private final UsernameCache cache = new UsernameCache();
     ServerSentEvent queueSSE;
 
     private QueuesRepository() {
@@ -85,6 +85,7 @@ public class QueuesRepository {
             if (Objects.equals(q.getId(), id)) {
                 chosenQueue.setValue(new Queue(q));
                 updateChosenQueue();
+                subscribe();
                 return;
             }
         }
@@ -124,29 +125,23 @@ public class QueuesRepository {
     public void loadUsernames() {
         Log.i(TAG, "Loading usernames");
         for (Queue.User u : chosenQueue.getValue().getQueuedPeople()) {
-//            final int index = i;
-//            Queue.User u = chosenQueue.getValue().getQueuedPeople().get(i);
             String username = cache.getUsername(u.getLogin());
-//            Log.i(TAG, u.getLogin() + "-" + username);
-//            chosenQueue.getValue().getQueuedPeople().get(i).setUsername("ASD");
             if (username != null) {
                 u.setUsername(username);
-            } else if (!Objects.equals(u.getType(), "NOT_LOGGED")) {
+            } else if (!Objects.equals(u.getType(), "NOT_LOGGED") && !Objects.equals(u.getType(), "VK")) {
                 worker.getUser(u.getLogin(),
                         result -> {
                             cache.setUsername(u.getLogin(), result.getUsername());
                             u.setUsername(result.getUsername());
-//                            Log.i(TAG, result.getUsername() + "-" + u.getUsername() + "-" + cache.getUsername(u.getLogin()) + "-" + chosenQueue.getValue().getQueuedPeople().get(index).getUsername());
                             peopleChangedTrigger.setValue(true);
-//                            chosenQueue.getValue().notifyListUpdate();
-//                            for (Queue.User uu : chosenQueue.getValue().getQueuedPeople()) {
-//                                Log.i("ASD", uu.getUsername());
-//                            }
                         },
                         (call, t) -> {});
             }
         }
+    }
 
+    public LiveData<Boolean> getQueueLoadState() {
+        return chosenQueueIsLoaded;
     }
 
     public void subscribe() {
@@ -185,7 +180,6 @@ public class QueuesRepository {
                     }
                 },
                 (call, t) -> {
-                    Log.i(TAG, "ASDASD");
                     queueEditionState.setValue("Request error");
                 });
     }
@@ -219,7 +213,6 @@ public class QueuesRepository {
     private int counter;
     private int count;
     public void loadFavourites() {
-        Log.i("ASD", "CLEARING");
         favouriteQueues.getValue().clear();
         count = favouriteQueuesIds.size();
         counter = 0;
@@ -301,17 +294,4 @@ public class QueuesRepository {
             }).start();
         }
     }
-
-
-
-
-//    @Nullable
-//    private Queue getQueue(String id) {
-//        for (Queue q : availableQueues.getValue()) {
-//            if (Objects.equals(q.getId(), id)) {
-//                return q;
-//            }
-//        }
-//        return null;
-//    }
 }

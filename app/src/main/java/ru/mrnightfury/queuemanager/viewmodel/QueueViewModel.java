@@ -1,7 +1,5 @@
 package ru.mrnightfury.queuemanager.viewmodel;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,18 +13,17 @@ import ru.mrnightfury.queuemanager.repository.model.Queue;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueuePutBody;
 
 public class QueueViewModel extends ViewModel {
-    private LiveData<AccountModel> account = AccountModel.getInstance();
-    private QueuesRepository repository;
-    private LiveData<Queue> chosenQueue;
-    private MutableLiveData<ArrayList<Queue.User>> users = new MutableLiveData<>(new ArrayList<>());
+    private final LiveData<AccountModel> account = AccountModel.getInstance();
+    private final QueuesRepository repository;
+    private final LiveData<Queue> chosenQueue;
+    private final MutableLiveData<ArrayList<Queue.User>> users = new MutableLiveData<>(new ArrayList<>());
 
-    private MutableLiveData<Boolean> isUserInQueue = new MutableLiveData<>(false);
-    private MutableLiveData<Boolean> isUserFrozen = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isUserInQueue = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isUserFrozen = new MutableLiveData<>(false);
 
     public QueueViewModel() {
         this.repository = QueuesRepository.getInstance();
         this.chosenQueue = repository.getQueue();
-//        this.users.setValue();
     }
 
     public LiveData<Queue> getChosenQueue() {
@@ -36,10 +33,6 @@ public class QueueViewModel extends ViewModel {
     public LiveData<Boolean> getPeopleChangedTrigger() {
         return repository.getPeopleChangedTrigger();
     }
-
-//    public void chooseQueue(String id) {
-//        repository.chooseQueue(id);
-//    }
 
     public void updateQueue() {
         repository.updateChosenQueue();
@@ -56,9 +49,9 @@ public class QueueViewModel extends ViewModel {
         return this.users;
     }
 
-    public void subscribe() {
-        repository.subscribe();
-    }
+//    public void subscribe() {
+//        repository.subscribe();
+//    }
 
     public void cancelSubscribe() {
         repository.cancelSubscribe();
@@ -100,5 +93,9 @@ public class QueueViewModel extends ViewModel {
 
     public LiveData<String> getQueueEditionState() {
         return repository.getQueueEditionState();
+    }
+
+    public LiveData<Boolean> getQueueLoadState() {
+        return repository.getQueueLoadState();
     }
 }

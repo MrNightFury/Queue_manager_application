@@ -1,5 +1,7 @@
 package ru.mrnightfury.queuemanager.repository.model;
 
+import androidx.annotation.NonNull;
+
 public class Settings {
     private Boolean isServiceEnabled;
 
@@ -12,6 +14,7 @@ public class Settings {
         return isServiceEnabled;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Settings{" +

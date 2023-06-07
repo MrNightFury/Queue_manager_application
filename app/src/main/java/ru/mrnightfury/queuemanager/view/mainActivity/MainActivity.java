@@ -1,13 +1,10 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -16,17 +13,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.background.ServiceLauncher;
 import ru.mrnightfury.queuemanager.databinding.ActivityMainBinding;
-import ru.mrnightfury.queuemanager.repository.AccountRepository;
 import ru.mrnightfury.queuemanager.repository.QueuesRepository;
 import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 
@@ -42,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         QueuesRepository.getInstance().init(getApplicationContext());
-
-//        DynamicColors.applyToActivityIfAvailable(this);
 
         SharedPreferences sharedPref = getApplicationContext()
                 .getSharedPreferences("queue.main", Context.MODE_PRIVATE);

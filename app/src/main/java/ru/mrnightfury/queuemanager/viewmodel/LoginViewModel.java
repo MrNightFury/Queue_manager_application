@@ -11,9 +11,9 @@ import ru.mrnightfury.queuemanager.repository.AccountRepository;
 import ru.mrnightfury.queuemanager.repository.model.LoginStates;
 
 public class LoginViewModel extends ViewModel {
-    private MutableLiveData<LoginStates> loginState;
-    private MutableLiveData<Integer> hint = new MutableLiveData<>(0);
-    private AccountRepository repository = AccountRepository.getInstance();
+    private final MutableLiveData<LoginStates> loginState;
+    private final MutableLiveData<Integer> hint = new MutableLiveData<>(0);
+    private final AccountRepository repository = AccountRepository.getInstance();
 
     public LoginViewModel() {
         super();

@@ -25,7 +25,6 @@ import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     LiveData<LoginStates> state;
-//    LoginViewModelOld loginVM;
     FragmentLoginBinding binding;
     NavController navController;
     LoginViewModel accountVM;
@@ -55,7 +54,6 @@ public class LoginFragment extends Fragment {
         });
 
         binding.loginButton.setOnClickListener(view1 -> {
-            Log.i("TEST", "1");
             accountVM.login(
                     binding.loginInputField.getText().toString(),
                     binding.passwordInputField.getText().toString()
@@ -66,7 +64,6 @@ public class LoginFragment extends Fragment {
             Log.i("LSObserver2", state.name());
             switch (state) {
                 case LOGGING:
-//                    Log.i("ASDASD", "asda");
                     navController.navigateUp();
                     break;
             }

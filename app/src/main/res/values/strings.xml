@@ -42,11 +42,11 @@
     <string name="notification_channel_id" translatable="false">qm.main_notifications</string>
     <string name="service_switch_text">Enable service</string>
     <string name="logOut_button_text">Log out</string>
-    <string name="enterDevMenu_button_text">Enter dev menu</string>
-    <string name="dev_checkServiceRunning_button_text">Check service</string>
-    <string name="dev_devMenu_label">Dev menu</string>
+    <string name="enterDevMenu_button_text" translatable="false">Enter dev menu</string>
+    <string name="dev_checkServiceRunning_button_text" translatable="false">Check service</string>
+    <string name="dev_devMenu_label" translatable="false">Dev menu</string>
     <string name="you_are_next_nitification">You are next in</string>
-    <string name="notificationChannel_name">Notifications</string>
+    <string name="notificationChannel_name" translatable="false">Notifications</string>
     <string name="favourite_tab_title">Favourite</string>
-    <string name="dev_checkFavourite_button">Check favourite</string>
+    <string name="dev_checkFavourite_button" translatable="false">Check favourite</string>
 </resources>

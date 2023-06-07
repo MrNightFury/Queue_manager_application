@@ -1,5 +1,6 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -22,20 +23,15 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import ru.mrnightfury.queuemanager.R;
-import ru.mrnightfury.queuemanager.databinding.FragmentConnectionCheckBinding;
 import ru.mrnightfury.queuemanager.databinding.FragmentStartBinding;
-import ru.mrnightfury.queuemanager.repository.model.Queue;
-import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.FavouriteViewModel;
-import ru.mrnightfury.queuemanager.viewmodel.LoginViewModel;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class StartFragment extends Fragment {
     private static final String TAG = "SF";
     FragmentStartBinding binding;
-//    LoginViewModel loginVM;
     QueuesViewModel queuesVM;
     AccountViewModel accountVM;
     FavouriteViewModel favouriteVM;
@@ -47,16 +43,16 @@ public class StartFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentStartBinding.inflate(inflater);
         return binding.getRoot();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

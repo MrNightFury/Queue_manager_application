@@ -47,11 +47,13 @@
     <fragment
         android:id="@+id/queueFragment"
         android:name="ru.mrnightfury.queuemanager.view.mainActivity.QueueFragment"
-        android:label="QueueFragment" />
+        android:label="QueueFragment"
+        tools:layout="@layout/fragment_queue" />
     <fragment
         android:id="@+id/createQueueFragment"
         android:name="ru.mrnightfury.queuemanager.view.mainActivity.CreateQueueFragment"
-        android:label="CreateQueueFragment" >
+        android:label="CreateQueueFragment"
+        tools:layout="@layout/fragment_create_queue" >
         <action
             android:id="@+id/action_queueCreated"
             app:destination="@id/queueFragment"
@@ -60,5 +62,6 @@
     <fragment
         android:id="@+id/devMenuFragment"
         android:name="ru.mrnightfury.queuemanager.view.DevMenuFragment"
-        android:label="DevMenuFragment" />
+        android:label="DevMenuFragment"
+        tools:layout="@layout/fragment_dev_menu" />
 </navigation>

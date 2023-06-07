@@ -4,19 +4,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,20 +27,13 @@ public class CreateQueueFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setHasOptionsMenu(true);
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateQueueBinding.inflate(inflater);
         return binding.getRoot();
-//        return inflater.inflate(R.layout.fragment_create_queue, container, false);
     }
 
     @Override
@@ -55,8 +41,6 @@ public class CreateQueueFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         creationVM = new ViewModelProvider(this).get(QueueCreationViewModel.class);
         navController = Navigation.findNavController(view);
-
-//        activity.getMenuInflater().inflate(R.menu.queue_menu, activity.getSupportActionBar().getCustomView());
 
         binding.confirmCreateQueue.setOnClickListener(v -> {
             creationVM.getQueueCreationState().observe(getViewLifecycleOwner(), newState -> {
@@ -73,9 +57,6 @@ public class CreateQueueFragment extends Fragment {
                     binding.queueDescriptionInput.getText().toString()
             );
         });
-//        binding.confirmCreateQueue.setOnClickListener(v -> {
-//            creationVM.check();
-//        });
     }
 
 

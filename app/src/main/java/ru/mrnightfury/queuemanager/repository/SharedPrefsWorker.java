@@ -68,4 +68,11 @@ public class SharedPrefsWorker {
                 .putBoolean(settingsKeyPrefix + "_serviceEnabled", settings.isServiceEnabled())
                 .apply();
     }
+
+    public void deleteAccount() {
+        sharedPrefs.edit()
+                .remove(login_key)
+                .remove(password_key)
+                .apply();
+    }
 }

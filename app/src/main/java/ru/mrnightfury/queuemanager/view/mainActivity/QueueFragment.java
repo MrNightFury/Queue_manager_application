@@ -10,13 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,29 +22,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.FragmentQueueBinding;
-import ru.mrnightfury.queuemanager.repository.model.Queue;
-import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.Util;
 import ru.mrnightfury.queuemanager.viewmodel.QueueViewModel;
-import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueFragment extends Fragment {
     private static final String TAG = "QF";
     private FragmentQueueBinding binding;
     private NavController navController;
-//    @Deprecated
-//    private QueuesViewModel queuesVM;
     private QueueViewModel queueVM;
-//    private LiveData<Queue> queue;
     private QueuePeopleListAdapter adapter;
-
-//    @Deprecated
-//    private ArrayList<Queue.User> users;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +42,7 @@ public class QueueFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentQueueBinding.inflate(inflater);
         return binding.getRoot();
@@ -76,7 +63,6 @@ public class QueueFragment extends Fragment {
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.deleteQueue_menuItem) {
-//                    queueVM.deleteQueue();
                     DeleteConfirmDialogFragment dialog = new DeleteConfirmDialogFragment();
                     FragmentManager manager = getActivity().getSupportFragmentManager();
 
@@ -92,11 +78,7 @@ public class QueueFragment extends Fragment {
 //                navController.navigateUp();
             }
         });
-//        queue = queueVM.getChosenQueue();
-//        queuesVM = new ViewModelProvider(this).get(QueuesViewModel.class);
-//        queue = queuesVM.getChosenQueue();
 
-//        users = new ArrayList<>();
         adapter = new QueuePeopleListAdapter(getContext(), R.layout.people_in_queue_item_layout,
                 queueVM.getUsers().getValue());
         binding.queuedPeopleList.setAdapter(adapter);
@@ -119,31 +101,17 @@ public class QueueFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });
 
-//        binding.queueStar.setOnClickListener(v -> {
-//            for (Queue.User u : queueVM.c().getQueuedPeople()) {
-//                Log.i("ASD", u.getUsername() == null ? "null" : u.getUsername());
-//            }
-//        });
-
-//        queue.getValue().getQueuedPeople().observe(getViewLifecycleOwner(), list -> {
-//            binding.queuePeopleCount.setText(Util.formatCount(list.size()));
-//
-//            users.clear();
-//            users.addAll(list);
-//            Log.i("TAG", users.toString());
-//            adapter.notifyDataSetChanged();
-//        });
-
         binding.setIsUserInQueue(queueVM.getIsUserInQueue());
         binding.setIsUserFrozen(queueVM.getIsUserFrozen());
 
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-//        queueVM.getIsUserInQueue().observe(getViewLifecycleOwner(), b -> {
-//            Log.i("ASDAS", Boolean.toString(b));
+//        queueVM.getQueueLoadState().observe(getViewLifecycleOwner(), state -> {
+//            if (state) {
+//                queueVM.subscribe();
+//            }
 //        });
-
-        queueVM.subscribe();
+//        queueVM.subscribe();
 
         binding.joinOrLeaveButton.setOnClickListener(v -> queueVM.joinOrLeave());
         binding.freezeButton.setOnClickListener(v -> queueVM.freeze());
@@ -169,7 +137,6 @@ public class QueueFragment extends Fragment {
                 }
             }
         });
-//        queue.getValue().getQueuedPeople()
     }
 
     @Override

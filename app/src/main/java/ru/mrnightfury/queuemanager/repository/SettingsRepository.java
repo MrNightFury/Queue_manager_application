@@ -19,8 +19,8 @@ public class SettingsRepository {
         return instance;
     }
 
-    private SharedPrefsWorker sharedPrefsWorker;
-    private MutableLiveData<Settings> settings;
+    private final SharedPrefsWorker sharedPrefsWorker;
+    private final MutableLiveData<Settings> settings;
 
     public SettingsRepository() {
         sharedPrefsWorker = SharedPrefsWorker.getInstance();

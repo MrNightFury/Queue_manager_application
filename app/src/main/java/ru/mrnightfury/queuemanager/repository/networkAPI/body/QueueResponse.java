@@ -27,27 +27,6 @@ public class QueueResponse {
     @Expose
     private UserState[] queuedPeople;
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public String getDescription() {
-        return description;
-    }
-
-    public Config getConfig() {
-        return config;
-    }
-
-    public UserState[] getQueuedPeople() {
-        return queuedPeople;
-    }
-
     public static class Config {
         @SerializedName("owner")
         @Expose
@@ -71,12 +50,21 @@ public class QueueResponse {
 
         @SerializedName("frozen")
         @Expose
-        @Nullable
         private Boolean frozen;
 
         @SerializedName("type")
         @Expose
         private String type;
+
+        @SerializedName("username")
+        @Expose
+        @Nullable
+        private String username;
+
+        @Nullable
+        public String getUsername() {
+            return username;
+        }
 
         public String getType() {
             return type;
@@ -86,9 +74,28 @@ public class QueueResponse {
             return login;
         }
 
-        @Nullable
         public Boolean isFrozen() {
             return frozen;
         }
+    }
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    public UserState[] getQueuedPeople() {
+        return queuedPeople;
     }
 }

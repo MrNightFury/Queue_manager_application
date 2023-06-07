@@ -8,7 +8,6 @@ public class UsernameCache {
     public void setUsername(String login, String username) {
         map.put(login, username);
     }
-
     public String getUsername(String login) {
         return map.get(login);
     }

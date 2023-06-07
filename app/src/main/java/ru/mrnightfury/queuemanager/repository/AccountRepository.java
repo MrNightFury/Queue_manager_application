@@ -5,14 +5,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.here.oksse.ServerSentEvent;
-
-import java.util.Objects;
-
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
-import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkService;
 import ru.mrnightfury.queuemanager.repository.networkAPI.NetworkWorker;
-import ru.mrnightfury.queuemanager.repository.networkAPI.QueueManagerAPI;
 import ru.mrnightfury.queuemanager.repository.model.LoginStates;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 
@@ -26,11 +20,10 @@ public class AccountRepository {
         return instance;
     }
 
-    private LiveData<AccountModel> model;
-//    private QueueManagerAPI API;
+    private final LiveData<AccountModel> model;
     private final SharedPrefsWorker sharedPrefs;
-    private MutableLiveData<LoginStates> loginState = new MutableLiveData<>(LoginStates.NONE);
-    private NetworkWorker worker;
+    private final MutableLiveData<LoginStates> loginState = new MutableLiveData<>(LoginStates.NONE);
+    private final NetworkWorker worker;
     private String status;
 
     public String getStatus() {
@@ -55,7 +48,6 @@ public class AccountRepository {
         }
         if (token != null) {
             worker.setToken(token);
-//            model.getValue().setToken(token);
         }
     }
 
@@ -67,7 +59,6 @@ public class AccountRepository {
         loginState.setValue(LoginStates.CONNECTION_CHECKING);
         worker.checkConnection(
                 () -> {
-//                    Log.i("ASD", "ASSDASDASD");
                     loginState.setValue(LoginStates.CONNECTED);
                     checkExist();
                 },
@@ -94,7 +85,6 @@ public class AccountRepository {
         worker.logIn(model.getValue(),
                 result -> {
                     if (result.isSuccess()) {
-                        model.getValue().setToken(result.getMessage());
                         sharedPrefs.saveAccount(model.getValue().getLogin(), model.getValue().getPassword());
                         loginState.setValue(LoginStates.LOGGED);
                     } else {
@@ -121,7 +111,6 @@ public class AccountRepository {
                 },
                 ((call, t) -> {
                     Log.i(TAG, "Error during account create");
-//                    loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
                 })
         );
     }
@@ -146,17 +135,9 @@ public class AccountRepository {
         this.loginState.setValue(LoginStates.INCORRECT_LOGIN_OR_PASSWORD);
     }
 
-
-//    public ServerSentEvent sse;
-//    public void watchUser() {
-//        sse = this.worker.watchUser(model.getValue().getLogin(),
-//                (sse, id, event, message) -> {
-//                    Log.i(TAG, event);
-//                }
-//        );
-//    }
-
-//    public void close() {
-//        sse.close();
-//    }
+    public void logOut() {
+        sharedPrefs.deleteAccount();
+        model.getValue().deleteAccount();
+        loginState.setValue(LoginStates.NONE);
+    }
 }

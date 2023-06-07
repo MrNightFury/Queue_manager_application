@@ -41,15 +41,12 @@
                 android:text="@string/retryConnection_button_text"
                 android:visibility="@{loginState == LoginStates.CONNECTION_FAILED ? View.VISIBLE : View.GONE}" />
 
-<!--            <Button-->
-<!--                android:id="@+id/checkLoginState_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="LoginState" />-->
-
+            <Button
+                android:id="@+id/checkLoginStateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button"
+                android:visibility="gone" />
         </LinearLayout>
-
-        <!--            android:text="@string/connection_check_label" />-->
-
     </LinearLayout>
 </layout>

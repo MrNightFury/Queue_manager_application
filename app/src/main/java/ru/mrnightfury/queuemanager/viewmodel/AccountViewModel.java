@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import ru.mrnightfury.queuemanager.repository.AccountRepository;
-import ru.mrnightfury.queuemanager.repository.QueuesRepository;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 
 public class AccountViewModel extends ViewModel {
     AccountRepository repository = AccountRepository.getInstance();
-//    QueuesRepository rep =
 
     LiveData<AccountModel> model = repository.getAccount();
 
@@ -27,11 +25,7 @@ public class AccountViewModel extends ViewModel {
         repository.exit();
     }
 
-//    public void watchUser() {
-//        repository.watchUser();
-//    }
-//
-//    public void close() {
-//        repository.close();
-//    }
+    public void logOut() {
+        repository.logOut();
+    }
 }

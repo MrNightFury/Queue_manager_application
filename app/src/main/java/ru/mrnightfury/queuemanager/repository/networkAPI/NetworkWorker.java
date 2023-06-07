@@ -26,13 +26,14 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserCreateRequest;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
 
 public class NetworkWorker {
-    private static String TAG = "NW";
+    private static final String TAG = "NW";
     private static NetworkWorker instance;
-    private static String[] URLs = {
+    private static final String[] URLs = {
             "http://10.0.2.2:8000/", // Для эмулятора
             "http://192.168.1.128:8000/",
             "http://192.168.137.216:8000/",
-            "http://192.168.149.245:8000"
+            "http://192.168.149.245:8000",
+            "http://212.109.197.222:8000"
     };
 
 
@@ -45,9 +46,9 @@ public class NetworkWorker {
 
     private String connectedURL;
     private QueueManagerAPI API;
-    private OkSse oksse;
+    private final OkSse oksse;
     private String token;
-    private LiveData<AccountModel> account = AccountModel.getInstance();
+    private final LiveData<AccountModel> account = AccountModel.getInstance();
     private NetworkWorker() {
         oksse = new OkSse();
     }
@@ -59,14 +60,15 @@ public class NetworkWorker {
     public void checkConnection(Runnable onSuccess, Runnable onFailure) {
         NetworkService.getInstance().connect(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Object> call, Response<Object> response) {
-//                Log.i("dasdSA", "UYGGHYUYGYU");
                 API = NetworkService.getInstance().getJSONApi();
                 connectedURL = call.request().url().toString();
                 onSuccess.run();
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Object> call, Throwable t) {
                 onFailure.run();
             }
@@ -75,8 +77,9 @@ public class NetworkWorker {
 
     public void logIn(AccountModel account, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
         API.getJWT(new LoginRequest(account.getLogin(), account.getPassword()))
-                .enqueue(new Callback<Result>() {
+                .enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Log.i(TAG, "JWT get response");
                 if (response.body().isSuccess()) {
@@ -86,6 +89,7 @@ public class NetworkWorker {
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Result> call, Throwable t) {
                 Log.i(TAG, "Failed to get JWT");
                 AccountRepository.getInstance().incorrectAccount();
@@ -98,12 +102,14 @@ public class NetworkWorker {
         Log.i(TAG, "Create Account request");
         API.createUser(request).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Log.i(TAG, "Create Account response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Result> call, Throwable t) {
                 Log.i(TAG, "Failed to Post Create Account");
                 onFailure.onFailure(call, t);
@@ -115,12 +121,14 @@ public class NetworkWorker {
         Log.i(TAG, "User " + login + " get request");
         API.getUser(login).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 Log.i(TAG, "Login get response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<UserResponse> call, Throwable t) {
                 Log.i(TAG, "Failed to get User");
                 onFailure.onFailure(call, t);
@@ -132,12 +140,14 @@ public class NetworkWorker {
         Log.i(TAG, "Queues get request");
         API.getQueues().enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<QueueResponse[]> call, Response<QueueResponse[]> response) {
                 Log.i(TAG, "Queues get response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<QueueResponse[]> call, Throwable t) {
                 Log.i(TAG, "Failed to get Queues: " + t.getMessage());
                 onFailure.onFailure(call, t);
@@ -149,12 +159,14 @@ public class NetworkWorker {
         Log.i(TAG, "Queue ret request");
         API.getQueue(queueId).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<QueueResponse> call, Response<QueueResponse> response) {
                 Log.i(TAG, "Queue get response");
                 onSuccess.onResult(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<QueueResponse> call, Throwable t) {
                 Log.i(TAG, "Failed to get Queue");
                 onFailure.onFailure(call, t);
@@ -167,6 +179,7 @@ public class NetworkWorker {
         Log.i(TAG, "Queue put: " + command);
         API.putQueue(queueId, this.token, new QueuePutBody(command)).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.code() != 401) {
                     onSuccess.onResult(response.body());
@@ -186,7 +199,8 @@ public class NetworkWorker {
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            @EverythingIsNonNull
+            public void onFailure( Call<Result> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
         });
@@ -197,6 +211,7 @@ public class NetworkWorker {
         Log.i(TAG, "Queue create: " + queue.toString());
         API.createQueue(this.token, queue).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.code() != 401) {
                     onSuccess.onResult(response.body());
@@ -216,6 +231,7 @@ public class NetworkWorker {
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Result> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
@@ -226,6 +242,7 @@ public class NetworkWorker {
         Log.i(TAG, "Queue create: ");
         API.deleteQueue(this.token, new QueueDeleteRequest(id)).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.code() != 401) {
                     onSuccess.onResult(response.body());
@@ -244,6 +261,7 @@ public class NetworkWorker {
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Result> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
@@ -253,11 +271,13 @@ public class NetworkWorker {
     public void checkQueue(String id, OnSuccess<Result> onSuccess, OnFailure<Result> onFailure) {
         API.checkQueue(id).enqueue(new Callback<>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
                 onSuccess.onResult(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<Result> call, Throwable t) {
                 onFailure.onFailure(call, t);
             }
@@ -308,7 +328,6 @@ public class NetworkWorker {
                 return null;
             }
         });
-//        return sse;
     }
 
     public ServerSentEvent watchUser(String login, ServerSentEvent.Listener listener) {
@@ -361,58 +380,6 @@ public class NetworkWorker {
         });
     }
 
-    @Deprecated
-    public ServerSentEvent watchTest(ServerSentEvent.Listener listener) {
-        Request request = new Request.Builder()
-                .url(connectedURL + "sse")
-                .build();
-
-        return oksse.newServerSentEvent(request, new ServerSentEvent.Listener() {
-            @Override
-            public void onOpen(ServerSentEvent sse, okhttp3.Response response) {
-                Log.i("User SSE", "SSE channel opened");
-                listener.onOpen(sse, response);
-            }
-
-            @Override
-            public void onMessage(ServerSentEvent sse, String id, String event, String message) {
-                Log.i("Test SSE", message);
-                listener.onMessage(sse, id, event, message);
-//                listener.run(sse, id, event, message);
-            }
-
-            @WorkerThread
-            @Override
-            public void onComment(ServerSentEvent sse, String comment) {
-                listener.onComment(sse, comment);
-                // When a comment is received
-            }
-
-            @WorkerThread
-            @Override
-            public boolean onRetryTime(ServerSentEvent sse, long milliseconds) {
-                return listener.onRetryTime(sse, milliseconds); // True to use the new retry time received by SSE
-            }
-
-            @Override
-            public boolean onRetryError(ServerSentEvent sse, Throwable throwable, okhttp3.Response response) {
-                return listener.onRetryError(sse, throwable, response);
-            }
-
-            @WorkerThread
-            @Override
-            public void onClosed(ServerSentEvent sse) {
-                Log.i("SSE", "Test SSE channel closed");
-                listener.onClosed(sse);
-            }
-
-            @Override
-            public Request onPreRetry(ServerSentEvent sse, Request originalRequest) {
-                return listener.onPreRetry(sse, originalRequest);
-            }
-        });
-    }
-
     public interface OnSuccess<E> {
         void onResult (E result);
     }
@@ -420,6 +387,6 @@ public class NetworkWorker {
         void onFailure(Call<E> call, Throwable t);
     }
     public interface OnMessage {
-        public void run(ServerSentEvent sse, String id, String event, String message);
+        void run(ServerSentEvent sse, String id, String event, String message);
     }
 }

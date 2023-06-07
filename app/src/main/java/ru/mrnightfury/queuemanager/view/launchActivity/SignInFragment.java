@@ -33,7 +33,7 @@ public class SignInFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSignInBinding.inflate(inflater);
         return binding.getRoot();
@@ -48,14 +48,17 @@ public class SignInFragment extends Fragment {
         error = accountVM.getError();
 
         state.observe(getViewLifecycleOwner(), newState -> {
+
             switch (newState) {
                 case LOGGING:
                     navController.navigateUp();
                     navController.navigateUp();
                     break;
                 case INCORRECT_LOGIN_OR_PASSWORD:
-                    Toast.makeText(getContext(), accountVM.getStatus(),
-                            Toast.LENGTH_SHORT).show();
+                    if (accountVM.getStatus() != null) {
+                        Toast.makeText(getContext(), accountVM.getStatus(),
+                                Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         });

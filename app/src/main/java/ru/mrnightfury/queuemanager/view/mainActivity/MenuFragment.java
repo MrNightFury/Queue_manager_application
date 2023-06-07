@@ -1,6 +1,5 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -16,10 +15,8 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import ru.mrnightfury.queuemanager.R;
-import ru.mrnightfury.queuemanager.background.NotificationsService;
 import ru.mrnightfury.queuemanager.databinding.FragmentMenuBinding;
 import ru.mrnightfury.queuemanager.repository.model.AccountModel;
 import ru.mrnightfury.queuemanager.viewmodel.AccountViewModel;
@@ -36,10 +33,7 @@ public class MenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         accountVM = new ViewModelProvider(getActivity()).get(AccountViewModel.class);
-//        loginVM = new ViewModelProvider(getActivity()).get(LoginViewModel.class);
         account = accountVM.getAccount();
-//        loginVM = new ViewModelProvider(getActivity()).get(LoginViewModelOld.class);
-
     }
 
     @Override
@@ -75,6 +69,11 @@ public class MenuFragment extends Fragment {
                     navController.navigateUp();
                 }
             }
+        });
+
+        binding.logOutButton.setOnClickListener(v -> {
+            accountVM.logOut();
+            getActivity().finish();
         });
 
         binding.enterDevMenuButton.setOnClickListener(v -> {

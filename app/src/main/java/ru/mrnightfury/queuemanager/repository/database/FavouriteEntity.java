@@ -28,8 +28,4 @@ public class FavouriteEntity {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public void setQueueId(String queueId) {
-        this.queueId = queueId;
-    }
 }

@@ -1,5 +1,8 @@
 package ru.mrnightfury.queuemanager.background;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,14 @@ public class ServiceLauncher {
         aRepository = AccountRepository.getInstance();
         login = aRepository.getAccount().getValue().getLogin();
         settings = sRepository.getSettings();
+
+        NotificationChannel chan = new NotificationChannel(
+                activity.getApplicationContext().getPackageName(),
+                "Service",
+                NotificationManager.IMPORTANCE_LOW);
+        NotificationManager manager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
 
         settings.observe(activity, s -> {
             if (s.isServiceEnabled() && !NotificationsService.isRunning() && aRepository.isLogged()) {

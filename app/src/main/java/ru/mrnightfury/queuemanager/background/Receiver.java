@@ -8,7 +8,7 @@ import android.util.Log;
 public class Receiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("TAG", "ASDASDASD");
+        Log.i("TAG", "Received stop intent");
         if (NotificationsService.isRunning()) {
             context.stopService(new Intent(context, NotificationsService.class));
         }

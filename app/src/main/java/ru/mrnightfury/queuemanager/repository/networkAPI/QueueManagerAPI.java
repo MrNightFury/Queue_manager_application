@@ -2,7 +2,6 @@ package ru.mrnightfury.queuemanager.repository.networkAPI;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
@@ -20,33 +19,25 @@ import ru.mrnightfury.queuemanager.repository.networkAPI.body.UserResponse;
 
 public interface QueueManagerAPI {
     @GET("/user/{login}")
-    public Call<UserResponse> getUser(@Path("login") String login);
-
+    Call<UserResponse> getUser(@Path("login") String login);
     @GET("/")
-    public Call<Object> checkConnection();
-
+    Call<Object> checkConnection();
     @POST("/login")
-    public Call<Result> getJWT(@Body LoginRequest request);
-
+    Call<Result> getJWT(@Body LoginRequest request);
     @POST("/users")
-    public Call<Result> createUser(@Body UserCreateRequest request);
-
+    Call<Result> createUser(@Body UserCreateRequest request);
     @GET("/queues")
-    public Call<QueueResponse[]> getQueues();
-
+    Call<QueueResponse[]> getQueues();
     @GET("/queue/{id}")
-    public Call<QueueResponse> getQueue(@Path("id") String queueId);
-
+    Call<QueueResponse> getQueue(@Path("id") String queueId);
     @GET("/queue/{id}/check")
-    public Call<Result> checkQueue(@Path("id") String queueId);
+    Call<Result> checkQueue(@Path("id") String queueId);
 
     @PUT("/queue/{id}")
-    public Call<Result> putQueue(@Path("id") String queueId, @Header("authorization") String token,
+    Call<Result> putQueue(@Path("id") String queueId, @Header("authorization") String token,
                                  @Body QueuePutBody body);
-
     @POST("/queues")
-    public Call<Result> createQueue(@Header("authorization") String token, @Body QueueCreateRequest body);
-
+    Call<Result> createQueue(@Header("authorization") String token, @Body QueueCreateRequest body);
     @HTTP(method="DELETE", path="/queues", hasBody=true)
-    public Call<Result> deleteQueue(@Header("authorization") String token, @Body QueueDeleteRequest request);
+    Call<Result> deleteQueue(@Header("authorization") String token, @Body QueueDeleteRequest request);
 }

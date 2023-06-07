@@ -1,7 +1,6 @@
 package ru.mrnightfury.queuemanager.view.mainActivity;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,15 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-//import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.R;
 import ru.mrnightfury.queuemanager.databinding.QueueListItemLayoutBinding;
 import ru.mrnightfury.queuemanager.repository.networkAPI.body.QueueResponse;
 import ru.mrnightfury.queuemanager.viewmodel.QueuesViewModel;
 
 public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.ViewHolder> {
-//    QueueListItemLayoutBinding binding;
-//    private final LayoutInflater inflater;
     private final ArrayList<QueueResponse> queues;
     private final QueuesViewModel queuesVM;
     OnClickListener listener = null;
@@ -32,11 +28,9 @@ public class QueueListAdapter extends RecyclerView.Adapter<QueueListAdapter.View
         this.queuesVM = vm;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = inflater.inflate(R.layout.queue_list_item_layout, parent, false);
-//        view.setOnClickListener(v -> Log.i("DSA", "HIBBHIBHI"));
-//        Log.i("ASSD", "ADSSA....");
         return new ViewHolder(
                 QueueListItemLayoutBinding.inflate(
                         LayoutInflater.from(parent.getContext()), parent, false));
