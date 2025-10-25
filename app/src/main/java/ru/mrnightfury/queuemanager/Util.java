@@ -29,4 +29,8 @@ public class Util {
             return "Error parsing json";
         }
     }
+
+    public enum Errors {
+
+    }
 }

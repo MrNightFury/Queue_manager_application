@@ -185,6 +185,9 @@ public class QueuesRepository {
     }
 
     public void deleteQueue(String id) {
+        if (isFavourite(id)) {
+            deleteFromFavourites(id);
+        }
         worker.deleteQueue(id,
                 result -> {
                     if (result.isSuccess()) {
@@ -216,10 +219,13 @@ public class QueuesRepository {
         favouriteQueues.getValue().clear();
         count = favouriteQueuesIds.size();
         counter = 0;
+        Log.i(TAG, "LOADING " + String.valueOf(favouriteQueuesIds.size()));
         for (FavouriteEntity e : favouriteQueuesIds) {
+            Log.i(TAG, "LOAD");
             worker.checkQueue(e.getQueueId(),
                     result -> {
                         if (result.isSuccess()) {
+                            Log.i(TAG, "QUEUE");
                             loadFavourite(e.getQueueId());
                         } else if (Objects.equals(result.getMessage(), "Queue does not exist")) {
                             new Thread(() -> {
@@ -236,10 +242,12 @@ public class QueuesRepository {
     public void loadFavourite(String id) {
         worker.loadQueue(id,
                 result -> {
+                    Log.i(TAG, "Queue loaded");
                     favouriteQueues.getValue().add(result);
                     Log.i("NOW", String.valueOf(favouriteQueues.getValue().size()));
                     counter++;
                     if (counter >= count) {
+                        Log.i(TAG, "NOTIFYING");
                         notifyFavouriteQueuesChanged();
                     }
                 },

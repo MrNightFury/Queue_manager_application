@@ -98,4 +98,8 @@ public class QueueViewModel extends ViewModel {
     public LiveData<Boolean> getQueueLoadState() {
         return repository.getQueueLoadState();
     }
+
+    public Boolean isFavourite() {
+        return repository.isFavourite(chosenQueue.getValue().getId());
+    }
 }

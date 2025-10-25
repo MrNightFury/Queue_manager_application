@@ -103,6 +103,6 @@ public class StartFragment extends Fragment {
             }
         });
 
-        favouriteVM.update();
+//        favouriteVM.update();
     }
 }

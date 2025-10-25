@@ -58,6 +58,4 @@ public class CreateQueueFragment extends Fragment {
             );
         });
     }
-
-
 }

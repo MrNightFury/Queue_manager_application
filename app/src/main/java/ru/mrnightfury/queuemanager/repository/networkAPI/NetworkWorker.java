@@ -273,6 +273,7 @@ public class NetworkWorker {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<Result> call, Response<Result> response) {
+                Log.i("WTF", "RESPONSE");
                 onSuccess.onResult(response.body());
             }
 

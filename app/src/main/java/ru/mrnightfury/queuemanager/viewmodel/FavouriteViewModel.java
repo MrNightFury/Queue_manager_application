@@ -14,7 +14,7 @@ public class FavouriteViewModel extends ViewModel {
 
     public FavouriteViewModel() {
         repository = QueuesRepository.getInstance();
-        repository.loadFavourites();
+//        repository.loadFavourites();
     }
 
     public LiveData<ArrayList<QueueResponse>> getFavouriteQueues() {
